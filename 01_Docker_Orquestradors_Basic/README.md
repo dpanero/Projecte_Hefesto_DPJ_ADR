@@ -1,7 +1,7 @@
 # Docker Orquestradors
 
 <p align="center">
-<img src="images/logo_docker.png" width="200">
+<img src="imagtes/logo_docker.png" width="200">
 </p>
 
 Aquest mini projecte consisteix en el desplegament d'una arquitectura de microserveis utilitzant diferents sistemes d'orquestració de contenidors.
@@ -34,3 +34,4 @@ Explorar diferents formes d'orquestrar contenidors:
 3. Kubernetes (orquestració avançada)
 
 Aquest projecte permet comprendre l'arquitectura de microserveis i el desplegament escalable d'aplicacions.
+
