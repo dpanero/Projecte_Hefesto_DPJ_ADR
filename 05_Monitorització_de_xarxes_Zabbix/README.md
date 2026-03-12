@@ -1,7 +1,7 @@
 # Monitorització de xarxa - Zabbix
 
 <p align="center">
-<img src="images/logo_zabbix.png" width="200">
+<img src="imatges/logo_zabbix.png" width="200">
 </p>
 
 Aquest projecte consisteix en la implementació d'un sistema de monitorització d'infraestructura.
@@ -34,3 +34,4 @@ Implementar un sistema capaç de supervisar:
 - rendiment del sistema
 
 El sistema genera alertes i informes per detectar problemes abans que afectin el servei.
+
