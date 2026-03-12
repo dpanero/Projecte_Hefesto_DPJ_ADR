@@ -1,7 +1,7 @@
 # Virtualització amb Proxmox
 
 <p align="center">
-<img src="images/logo_proxmox.png" width="200">
+<img src="imatges/logo_proxmox.png" width="200">
 </p>
 
 Aquest projecte consisteix en la creació d'un entorn virtual utilitzant la plataforma Proxmox.
@@ -33,3 +33,4 @@ Crear una infraestructura virtual capaç de:
 - gestionar recursos de CPU, RAM i disc
 - configurar xarxes virtuals
 - desplegar serveis dins del laboratori
+
