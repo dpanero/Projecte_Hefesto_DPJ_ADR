@@ -10,11 +10,6 @@ Aquest projecte té com a objectiu construir una infraestructura virtual complet
 
 ---
 
-# Autors
-Projecte realitzat per Axel David Rodriguez i Daniel Pañero Juste del cicle formatiu ASIX del insitut Sapalomera.
-
----
-
 # Arquitectura del laboratori
 
 La infraestructura està composta per:
@@ -71,3 +66,7 @@ Aquest laboratori permet:
 - Implementar monitorització
 - Automatitzar configuracions
 - Documentar un entorn complet d'administració de sistemes
+
+---
+# Autors
+Projecte realitzat per Axel David Rodriguez i Daniel Pañero Juste del cicle formatiu ASIX del insitut Sapalomera.
