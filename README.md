@@ -6,7 +6,7 @@ Projecte realitzat per Axel David Rodriguez i Daniel Pañero Juste del cicle for
 ---
 
 <p align="center">
-<img src="images/hefesto_logo.png" width="300">
+<img src="imatges/hefesto_logo.png" width="300">
 </p>
 
 Hefesto és el nostre laboratori d'infraestructura IT dissenyat per a la realització de tots el miniprojectes proposats.
