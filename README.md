@@ -1,12 +1,12 @@
 # HEFESTO
 
-<p align="center">
-<img src="imatges/hefesto_logo.png" width="300">
-</p>
-
 Hefesto és el nostre laboratori d'infraestructura IT dissenyat per a la realització de tots el miniprojectes proposats.
 
 Aquest projecte té com a objectiu construir una infraestructura virtual completa que simuli un entorn real d'empresa.
+
+<p align="center">
+<img src="imatges/hefesto_logo.png" width="300">
+</p>
 
 ---
 
