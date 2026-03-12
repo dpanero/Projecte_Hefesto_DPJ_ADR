@@ -1,7 +1,7 @@
 # Automatització de la configuració
 
 <p align="center">
-<img src="images/logo_automation.jpg" width="200">
+<img src="imatges/logo_automation.jpg" width="200">
 </p>
 
 Aquest projecte explora la implementació de sistemes d'automatització per gestionar configuracions de servidors i infraestructures.
@@ -33,3 +33,4 @@ Implementar un sistema de gestió de configuració que permeti:
 - facilitar el desplegament d'infraestructura
 
 Aquest tipus d'eines permet gestionar múltiples sistemes des d'una única plataforma.
+
