@@ -22,6 +22,10 @@ La infraestructura està composta per:
 - Plataforma de virtualització Proxmox
 - Serveis desplegats en màquines virtuals
 
+<p align="center">
+<img src="imatges/Xarxa Hefesto Digrama.png" width="300">
+</p>
+
 ---
 
 # Documentació de la infraestructura
