@@ -7,7 +7,7 @@ D'aquesta manera tot lo que arribi al nostre nom de domini asociat a la IP públ
 
 Esquema total de la xarxa:
 <p align="center">
-<img src="/imatges/xarxa_hefesto_diagrama.png" width="300">
+<img src="/imatges/xarxa_hefesto_diagrama.png" width="400">
 </p>
 
 ---
