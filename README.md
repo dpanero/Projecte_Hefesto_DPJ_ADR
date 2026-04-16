@@ -23,7 +23,7 @@ La infraestructura està composta per:
 - Serveis desplegats en màquines virtuals
 
 <p align="center">
-<img src="imatges/xarxa_hefesto_diagrama.png" width="400">
+<img src="imatges/diagrama_xarxa_hefesto.png" width="400">
 </p>
 
 ---
