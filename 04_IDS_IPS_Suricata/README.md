@@ -16,12 +16,15 @@ Aquest mini projecte consisteix en la implementació d'un sistema de detecció i
 
 ---
 
-# Tecnologies utilitzades
-
+# Tecnologies involucrades en aquest miniprojecte
+(Entorn)
+- Pfsense
+(Principal)
 - Suricata
-- Snort
-- OSSEC
-
+(Complementaries)
+- Proxmox
+- OpenVPN
+- Zabbix
 ---
 
 # Objectiu del projecte
