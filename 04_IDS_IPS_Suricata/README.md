@@ -8,14 +8,6 @@ Aquest mini projecte consisteix en la implementació d'un sistema de detecció i
 
 ---
 
-# Documentació
-
-| Document | Descripció |
-|---------|------------|
-| [Instal·lació](docs/installation.md) | Instal·lació i configuració del sistema IDS |
-
----
-
 # Tecnologies involucrades en aquest miniprojecte
 (Entorn)
 - Pfsense
@@ -25,6 +17,7 @@ Aquest mini projecte consisteix en la implementació d'un sistema de detecció i
 - Proxmox
 - OpenVPN
 - Zabbix
+
 ---
 
 # Objectiu del projecte
@@ -79,3 +72,16 @@ D’aquesta manera podem aprofitar el pfsense que muntarem a la nostra xarxa fen
 ## Justificacions de la nostra elecció
 Investigant s’ha arribat a la conclusió que la millor opció a treballar es Suricata ja que es troba molta documentació i tutorials sobre el funcionament, es potent i aprofita molt bé les CPUs de alta gama, també s’ha dubtat entre instal·lar el servei dins del pfsense o fer un servidor dedicat, finalment em vist que en petites empreses o entorns amb un tràfic moderat com el nostre laboratori, el Suricata com a servei de pfsense es perfecte ja que d’aquesta manera aprofitem la gestió unificada de Firewall/IPS i no malgastem més hardware en un servidor dedicat, el qual només aprofitaríem en una xarxa de alt rendiment (10Gbps+) o si tenim el Firewall saturat, en el nostre cas seria excessiu.
 
+---
+
+# Documentació i manuals
+
+| Document | Descripció |
+|---------|------------|
+| [Instal·lació del Firewall](docs/03_Instalacio_del_Firewall.pdf) | Instal·lació i configuració d'un firewall PFsense, a partir d'aquest sortira tot el projecte |
+| [Instal·lació del sistema IDS/IPS](docs/04_Installacio_i_Configuracio_Basica_de_Suricat.pdf) | Instal·lació i configuració de Suricata com a sistema IDS/IPS al nostre firewall pfsense |
+| [Definició de politiques de seguretat](docs/05_Definicio_de_Politiques_de_Seguretat.pdf) | Definició de politiques de seguretat i aplicació d'aquestes al nostre sistema |
+| [Analisis dels Logs i Alertes](docs/06_Analisi_de_Logs_i_Alertes.pdf) | Analisis dels Logs i Alertes generats per Suricata |
+| [](docs/07_Simulacio_d_Atacs_i_Resposta.pdf) | |
+| [](docs/) | |
+---
