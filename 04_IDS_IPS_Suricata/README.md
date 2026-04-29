@@ -42,10 +42,9 @@ Aquest sistema ajuda a reforçar la seguretat de la infraestructura del laborato
 
 # Introducció als IDS/IPS 
 ## Presentació dels conceptes bàsics de detecció i prevenció d'intrusions
-| Diferencies | ----------- |
+| Diferencies |
 | ---------- | ---------- |
 | IDS | Sistema que detecta intrusions però no les bloqueja |
-| ---------- | ---------- |
 | IPS | Sistema que detecta i bloqueja automàticament |
 - El IDS (Intrusion Detection System) com el seu nom indica es un dispositiu que monitoritza la xarxa per tal de detectar si n’hi ha activitats malicioses o si s’ha violat alguna política de seguretat. Aquest només detecta les intrusions, això vol dir que només ens generarà una alerta però no bloquejarà res.
 - El IPS (Intrusion Prevention System) en canvi si que pot bloquejar en temps real la activitat maliciosa per tant aquest va un pas més enllà que el IDS, la manera de fer-ho es bloquejar ports o tancar alguna connexió que pugui ser sospitosa.
@@ -74,9 +73,7 @@ D’aquesta manera podem aprofitar el pfsense que muntarem a la nostra xarxa fen
 | Sistema | Tipus | Avantatges | Inconvenients |
 | ---------- | ---------- | ---------- | ---------- |
 | Snort | IDS/IPS | molt popular | menys multi-thread |
-| ---------- | ---------- | ---------- | ---------- |
 | Suricata | IDS/IPS | multi-thread | més consum |
-| ---------- | ---------- | ---------- | ---------- |
 | OSSEC | HIDS | monitoritza host | no analitza xarxa |
 
 ## Justificacions de la nostra elecció
