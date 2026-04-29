@@ -5,7 +5,7 @@ Hefesto és el nostre laboratori d'infraestructura IT dissenyat per a la realitz
 Aquest projecte té com a objectiu construir una infraestructura virtual completa que simuli un entorn real d'empresa.
 
 <p align="center">
-<img src="imatges/hefesto_logo.png" width="300">
+<img src="imatges/hefesto_logo.png" width="600">
 </p>
 
 ---
