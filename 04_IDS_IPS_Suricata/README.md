@@ -42,8 +42,8 @@ Aquest sistema ajuda a reforçar la seguretat de la infraestructura del laborato
 
 # Introducció als IDS/IPS 
 ## Presentació dels conceptes bàsics de detecció i prevenció d'intrusions
-| Diferencies |
-| ---------- |
+| Diferencies | ----------- |
+| ---------- | ---------- |
 | IDS | Sistema que detecta intrusions però no les bloqueja |
 | ---------- | ---------- |
 | IPS | Sistema que detecta i bloqueja automàticament |
