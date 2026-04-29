@@ -37,6 +37,7 @@ Desplegar un sistema IDS/IPS que permeti:
 - simular atacs per validar el sistema
 
 Aquest sistema ajuda a reforçar la seguretat de la infraestructura del laboratori.
+
 ---
 
 # Introducció als IDS/IPS 
