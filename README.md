@@ -41,7 +41,6 @@ La infraestructura està composta per:
 | Projecte | Descripció |
 |---------|------------|
 | [Docker Orquestradors](01_Docker_Orquestradors_Basic/README.md) | Desplegament de microserveis amb Docker Compose, Swarm i Kubernetes |
-| [Automatització de la configuració](02_Automatització_de_la_Configuració/README.md) | Automatització de configuracions amb Ansible |
 | [IDS / IPS](04_IDS_IPS_Suricata/README.md) | Sistema de detecció i prevenció d'intrusions |
 | [Monitorització de xarxa](05_Monitorització_de_xarxes_Zabbix/README.md) | Monitorització d'infraestructura amb Zabbix |
 | [Virtualització](09_Proxmox/README.md) | Plataforma de virtualització Proxmox |
