@@ -124,11 +124,10 @@ També és important la parte visual. Zabbix permet crear dashboards personalitz
 | Apartat | Document |
 |---|---|
 | Instal·lació i Configuració Bàsica | [Instal·lació i Configuració Bàsica](docs/03_instal_lacio_i_configuracio_basica.md) |
-| Disseny de Polítiques de Monitorització | [Disseny de Polítiques de Monitorització](docs/disseny_de_politiques_de_monitoritzacio.md) |
+| Disseny de Polítiques de Monitorització | [Disseny de Polítiques de Monitorització](docs/04_disseny_de_politiques_de_monitoritzacio.md) |
 | Personalització i Desenvolupament de Scripts | [Personalització i Desenvolupament de Scripts](docs/personalitzacio_i_desenvolupament_de_scripts.md) |
 | Implementació de Dashboard i Informes | [Implementació de Dashboard i Informes](docs/implementacio_de_dashboard_i_informes.md) |
 | Proves i Validació | [Proves i Validació](docs/proves_i_validacio.md) |
-| Documentació i Presentació | [Documentació i Presentació](docs/documentacio_i_presentacio.md) |
 
 ---
 

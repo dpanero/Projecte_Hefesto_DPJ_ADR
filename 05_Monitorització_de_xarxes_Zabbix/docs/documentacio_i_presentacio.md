@@ -1,2 +1,0 @@
-# Documentació i Presentació
-
