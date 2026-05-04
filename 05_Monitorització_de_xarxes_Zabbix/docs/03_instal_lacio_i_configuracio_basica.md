@@ -4,7 +4,7 @@ En aquesta part es documenta el procés d’instal·lació inicial del servidor 
 
 Primerament instal·lem el sistema base que sera un Debian 12.
 
-![Zabbix 1](../imatges/zabbix%20%281%29.png)
+![Zabbix 1](../imatges/zabbix (1).png)
 
 Ara es realitza un "`apt update`" per actualitzar la llista de repositoris del sistema. Aquest pas és important perquè Debian reconegui els paquets disponibles i també comprovi correctament el repositori de Zabbix que s’utilitzarà durant la instal·lació.
 
