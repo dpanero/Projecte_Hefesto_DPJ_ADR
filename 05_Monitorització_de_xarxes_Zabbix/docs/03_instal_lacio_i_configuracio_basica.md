@@ -74,6 +74,8 @@ Finalment, l’assistent confirma que la interfície web de Zabbix s’ha instal
 
 ![Zabbix 18](<../imatges/03/1- zabbix (18).png>)
 
+---
+
 Després de deixar Zabbix instal·lat, comencem amb la integració del NAS. Afegim el host de TrueNAS dins de Zabbix amb el nom `truenas` i el nom visible `NAS-Hefesto-1`. Inicialment li assignem una interfície SNMP amb la IP `172.16.0.9`, que és la IP del NAS dins la xarxa.
 
 ## NAS
@@ -100,11 +102,11 @@ Un cop el NAS queda monitoritzat, Zabbix ja comença a generar avisos. En aquest
 
 ![NAS 6](<../imatges/03/2- nas (6).png>)
 
-Per integrar Proxmox, importem una plantilla específica que permet obtenir mètriques de la plataforma de virtualització. Aquesta plantilla ens ajudarà a monitoritzar nodes, màquines virtuals, recursos i l’estat general de l’entorn Proxmox des de Zabbix.
-
 ---
 
 ## Cluster Proxmox
+
+Per integrar Proxmox, importem una plantilla específica que permet obtenir mètriques de la plataforma de virtualització. Aquesta plantilla ens ajudarà a monitoritzar nodes, màquines virtuals, recursos i l’estat general de l’entorn Proxmox des de Zabbix.
 
 ### Pas previ
 
@@ -157,6 +159,8 @@ Ja podem crear el host per al cluster de proxmox indicant la plantilla que acabe
 Dins de Zabbix afegim les macros necessàries perquè la plantilla de Proxmox pugui connectar-se per API. Configurem el token, el secret, el host de Proxmox `172.16.0.4` i el port `8006`.
 
 ![Proxmox 6](<../imatges/03/3- proxmox (6).png>)
+
+---
 
 ## PfSense i Suricata
 
