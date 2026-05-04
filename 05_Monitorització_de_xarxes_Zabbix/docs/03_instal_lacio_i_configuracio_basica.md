@@ -1,12 +1,12 @@
-## Instal·lació i Configuració Bàsica de Zabbix
+# Instal·lació i Configuració Bàsica de Zabbix
 
 En aquesta part documentem la instal·lació inicial de Zabbix dins del projecte Hefesto i la integració dels primers dispositius importants de la infraestructura. El servidor Zabbix s’ha desplegat sobre una màquina Debian 12 situada a la xarxa LAN amb la IP `172.16.0.5`. Aquesta màquina serà el punt central des d’on revisarem l’estat dels servidors, serveis, dispositius de xarxa, NAS i nodes Proxmox.
 
-Primerament instal·lem el sistema base de Debian 12 sobre la màquina virtual que farà de servidor Zabbix. Aquesta VM queda desplegada dins de Proxmox i serà la base sobre la qual instal·larem tots els components de monitorització.
+Primerament instal·lem el sistema base de Debian 12 sobre la màquina virtual que farà de servidor Zabbix, aquesta VM queda desplegada dins de Proxmox i serà la base sobre la qual instal·larem tots els components de monitorització.
 
 ![Zabbix 1](<../imatges/03/1- zabbix (1).png>)
 
-Després configurem la IP estàtica del servidor Zabbix. En aquest cas deixem la interfície `ens18` amb la IP `172.16.0.5`, màscara `255.255.255.0`, porta d’enllaç `172.16.0.1` i DNS `172.16.0.1` i `8.8.8.8`. Això és important perquè el servidor de monitorització sempre tingui una adreça fixa dins la LAN.
+En aquest cas deixem la interfície `ens18` amb la IP `172.16.0.5`, màscara `255.255.255.0`, porta d’enllaç `172.16.0.1` i DNS `172.16.0.1` i `8.8.8.8`. Això és important perquè el servidor de monitorització sempre tingui una adreça fixa dins la LAN.
 
 ![Zabbix 2](<../imatges/03/1- zabbix (2).png>)
 
@@ -14,7 +14,7 @@ Un cop tenim la xarxa preparada, fem un `apt update` per actualitzar la llista d
 
 ![Zabbix 3](<../imatges/03/1- zabbix (3).png>)
 
-Aquí descarreguem el paquet oficial del repositori de Zabbix per a Debian 12. Primer es veu un intent sense permisos suficients i després ja s’instal·la correctament amb `sudo dpkg -i`. Amb això afegim el repositori oficial de Zabbix al sistema.
+Aquí descarreguem el paquet oficial del repositori de Zabbix per a Debian 12, primer es veu un intent que em realitzat sense permisos suficients i després ja s’instal·la correctament amb `sudo dpkg -i`. Amb això afegim el repositori oficial de Zabbix al sistema.
 
 ![Zabbix 4](<../imatges/03/1- zabbix (4).png>)
 
@@ -74,11 +74,9 @@ Finalment, l’assistent confirma que la interfície web de Zabbix s’ha instal
 
 ![Zabbix 18](<../imatges/03/1- zabbix (18).png>)
 
-Com a preparació per treballar amb logs del sistema, comprovem que `rsyslog` està actiu al servidor Zabbix. Aquest servei ens servirà més endavant per poder rebre o gestionar registres d’altres equips si volem centralitzar logs o relacionar-los amb la monitorització.
-
-![Rsyslog 1](<../imatges/03/4- rsyslog (1).png>)
-
 Després de deixar Zabbix instal·lat, comencem amb la integració del NAS. Afegim el host de TrueNAS dins de Zabbix amb el nom `truenas` i el nom visible `NAS-Hefesto-1`. Inicialment li assignem una interfície SNMP amb la IP `172.16.0.9`, que és la IP del NAS dins la xarxa.
+
+## NAS
 
 ![NAS 1](<../imatges/03/2- nas (1).png>)
 
@@ -104,6 +102,12 @@ Un cop el NAS queda monitoritzat, Zabbix ja comença a generar avisos. En aquest
 
 Per integrar Proxmox, importem una plantilla específica que permet obtenir mètriques de la plataforma de virtualització. Aquesta plantilla ens ajudarà a monitoritzar nodes, màquines virtuals, recursos i l’estat general de l’entorn Proxmox des de Zabbix.
 
+---
+
+## Cluster Proxmox
+
+Creem un usuari específic anomenat `zabbix` dins del domini d’autenticació de Proxmox VE. La idea és no dependre sempre de l’usuari `root`, deixant una compte més clara només per a la monitorització.
+
 ![Proxmox 1](<../imatges/03/3- proxmox (1).png>)
 
 A Proxmox preparem un token d’API perquè Zabbix pugui consultar informació sense haver d’iniciar sessió manualment. Primer provem la creació del token des de l’apartat de permisos de Proxmox.
@@ -114,18 +118,52 @@ Després de crear el token, Proxmox mostra el secret una única vegada. Guardem 
 
 ![Proxmox 3](<../imatges/03/3- proxmox (3).png>)
 
-Dins de Zabbix afegim les macros necessàries perquè la plantilla de Proxmox pugui connectar-se per API. Configurem el token, el secret, el host de Proxmox `172.16.0.10` i el port `8006`.
+Importem la plantilla de Proxmox que em descarregat del lloc oficial a ("https://www.zabbix.com/integrations/proxmox").
 
 ![Proxmox 4](<../imatges/03/3- proxmox (4).png>)
 
-També creem un usuari específic anomenat `zabbix` dins del domini d’autenticació de Proxmox VE. La idea és no dependre sempre de l’usuari `root`, deixant una compte més clara només per a la monitorització.
+Ja podem crear el host per al cluster de proxmox indicant la plantilla que acabem d'importar.
 
 ![Proxmox 5](<../imatges/03/3- proxmox (5).png>)
 
-Amb l’usuari preparat, creem un nou token associat a `zabbix@pve`. Aquest token serà el que utilitzarem finalment perquè Zabbix consulti Proxmox d’una manera més neta i separada de l’usuari administrador.
+Dins de Zabbix afegim les macros necessàries perquè la plantilla de Proxmox pugui connectar-se per API. Configurem el token, el secret, el host de Proxmox `172.16.0.10` i el port `8006`.
 
 ![Proxmox 6](<../imatges/03/3- proxmox (6).png>)
 
-Finalment, Proxmox ens mostra el secret del token `zabbix@pve:zabbix`. Aquest valor el guardem per configurar-lo a Zabbix i deixar preparada la comunicació per API entre el servidor de monitorització i Proxmox.
+## PfSense i Suricata
 
-![Proxmox 7](<../imatges/03/3- proxmox (7).png>)
+Com a preparació per treballar amb logs del sistema, comprovem que `rsyslog` està actiu al servidor Zabbix. Aquest servei ens servirà més endavant per poder rebre o gestionar registres d’altres equips si volem centralitzar logs o relacionar-los amb la monitorització, en aquest cas ho farem servir per pfsense i Suricata.
+
+![Rsyslog 1](<../imatges/03/4- rsyslog (1).png>)
+
+Ens assegurem de tenir activa la recepció de logs remots al port 514 tant per TCP com per UDP.
+
+![Rsyslog 2](<../imatges/03/4- rsyslog (2).png>)
+![Rsyslog 3](<../imatges/03/4- rsyslog (3).png>)
+
+Un cop confirmat que rsyslog esta actiu podem continuar, en primer lloc creem un arxiu a `/etc/rsyslog.d/30—pfsense.conf` on indiquem de quina IP ha de rebre els logs i on els gardara, indiquem en el nostre cas la IP del PfSense `172.16.0.1` i l'arxiu de logs `/var/log/pfsense.log`.
+
+![Rsyslog 4](<../imatges/03/4- rsyslog (4).png>)
+
+Amb un tail verifiquem que estem rebent els logs del pfsense i per tant també de Suricata al nostre Zabbix.
+
+![Rsyslog 5](<../imatges/03/4- rsyslog (5).png>)
+
+Entrem dins el host del propi servidor de Zabbix al panell per afegir un nou item.
+
+![Rsyslog 5.2](<../imatges/03/4- rsyslog (5.2).png>)
+
+En aquest item em indicat una "key" per tal que pugui filtrar els logs que continguin la paraula Suricata i poder separar aquests logs de la resta.
+
+![Rsyslog 6](<../imatges/03/4- rsyslog (6).png>)
+
+Aquí ja podem veure l'item actiu:
+
+![Rsyslog 7](<../imatges/03/4- rsyslog (7).png>)
+
+Creem un altre item del host zabbix per als logs generals de pfsense.
+
+![Rsyslog 8](<../imatges/03/4- rsyslog (8).png>)
+
+Aquí podem veure com ja esta actiu:
+
