@@ -132,7 +132,7 @@ Amb aixó ja tenim activa la IP del keepalived, confirmem que respon:
 
 ![Keepalived 5](<../imatges/03/5- keepalived (6).png>)
 
-Ara ja podem proseguir amb la integració del cluster sense problema de duplicitat d'alertes.
+Ara ja podem proseguir amb la integració del cluster sense problema de duplicació d'alertes.
 
 ### Integració cluster Proxmox
 
@@ -197,5 +197,9 @@ Creem un altre item del host zabbix per als logs generals de pfsense.
 
 ![Rsyslog 8](<../imatges/03/4- rsyslog (8).png>)
 
-Aquí podem veure com ja esta actiu:
+A les següents captures es demostren tots els hosts i els items que em creat a Zabbix actius i rebent informació:
 
+![Comprov 1](<../imatges/03/6- comprov (1).png>)
+![Comprov 2](<../imatges/03/6- comprov (2).png>)
+![Comprov 3](<../imatges/03/6- comprov (3).png>)
+![Comprov 4](<../imatges/03/6- comprov (4).png>)
