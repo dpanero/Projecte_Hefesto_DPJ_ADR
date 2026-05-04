@@ -76,9 +76,9 @@ Finalment, l’assistent confirma que la interfície web de Zabbix s’ha instal
 
 ---
 
-Després de deixar Zabbix instal·lat, comencem amb la integració del NAS. Afegim el host de TrueNAS dins de Zabbix amb el nom `truenas` i el nom visible `NAS-Hefesto-1`. Inicialment li assignem una interfície SNMP amb la IP `172.16.0.9`, que és la IP del NAS dins la xarxa.
-
 ## NAS
+
+Després de deixar Zabbix instal·lat, comencem amb la integració del NAS. Afegim el host de TrueNAS dins de Zabbix amb el nom `truenas` i el nom visible `NAS-Hefesto-1`. Inicialment li assignem una interfície SNMP amb la IP `172.16.0.9`, que és la IP del NAS dins la xarxa.
 
 ![NAS 1](<../imatges/03/2- nas (1).png>)
 
