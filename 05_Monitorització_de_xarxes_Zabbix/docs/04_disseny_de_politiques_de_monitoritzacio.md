@@ -15,6 +15,8 @@ Ja tindriem la regla generada i aplicada.
 
 ![Discover 2](<../imatges/04/2- discover (2).png>)
 
+---
+
 ## Cluster Proxmox
 
 Lo primer que m'he trobat al cluster es que detecta com problemes que les plantilles o maquines virtuals estiguin apagades lo qual tampoc es correcte sempre, modifiquem els triggers (alertes) per tal de fer que només doni com informació el fet de que estan parades i els reinicis pero sense donar alerta greu, les greus només saltaran si algún dels nodes cau, després mostrarem com fem un dashboard visual per mostrar la informació comodament.
@@ -29,6 +31,8 @@ Ens assegurem que dels nodes si que reporti triggers si no estan actius, es impo
 Ara podem veure com només rebem informacions de que s'han reiniciat maquines virtuals recentment pero son informatives i que podem acceptar o apagar més endavant en cas que ens molesti molt, de moment com que reiniciar VMs no es una cosa frequent esta bé rebre un missatge al respecte.
 
 ![Trigger Proxmox 4](<../imatges/04/3- triggers proxmox (4).png>)
+
+---
 
 ## NAS
 
@@ -48,6 +52,8 @@ També verifiquem que els items de la template reben dades de la pool de discs i
 Finalment confirmem que rebem les alertes, en aquest cas el llindar de memoria que em deixat actiu mostra que el NAS ha estat a més del 90% durant més de 5 minuts, aixó ens genera un avis greu.
 
 ![Trigger NAS 4](<../imatges/04/4- triggers nas (4).png>)
+
+---
 
 ## Propi servidor Zabbix
 
