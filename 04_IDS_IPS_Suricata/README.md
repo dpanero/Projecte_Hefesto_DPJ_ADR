@@ -82,6 +82,6 @@ Investigant s’ha arribat a la conclusió que la millor opció a treballar es S
 | [Instal·lació del sistema IDS/IPS](docs/04_Installacio_i_Configuracio_Basica_de_Suricat.pdf) | Instal·lació i configuració de Suricata com a sistema IDS/IPS al nostre firewall pfsense |
 | [Definició de politiques de seguretat](docs/05_Definicio_de_Politiques_de_Seguretat.pdf) | Definició de politiques de seguretat i aplicació d'aquestes al nostre sistema |
 | [Analisis dels Logs i Alertes](docs/06_Analisi_de_Logs_i_Alertes.pdf) | Analisis dels Logs i Alertes generats per Suricata |
-| [](docs/07_Simulacio_d_Atacs_i_Resposta.pdf) | |
-| [](docs/) | |
+| [Simulació d'atacs i resposta](docs/07_Simulacio_d_Atacs_i_Resposta.pdf) | Simulem un atac a la nostra xarxa per verificar el funcionament del sistema de resposta |
+| [Configuració de sistemes complementaris](08_Configuracio_de_Sistemes_Complementaris.pdf/docs/) | Explicació de tots els sistemes complementaris que hem afegit per millorar la seguretat de la nostra xarxa |
 ---
