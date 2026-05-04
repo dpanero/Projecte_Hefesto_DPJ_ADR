@@ -32,7 +32,7 @@ S’importa l’estructura inicial de la base de dades de Zabbix utilitzant el f
 
 S’obre el fitxer principal de configuració del servidor Zabbix, ubicat a `/etc/zabbix/zabbix_server.conf`. Aquest fitxer és necessari per indicar a Zabbix com s’ha de connectar amb la base de dades i quins paràmetres ha d’utilitzar durant el seu funcionament.
 
-![Zabbix 8](<../imatges/03/zabbix (8).png>)
+
 
 Es mostra la configuració de connexió amb la base de dades dins del fitxer `zabbix_server.conf`. S’indica el nom de la base de dades, l’usuari i la contrasenya que utilitzarà el servidor Zabbix per accedir a MariaDB.
 
