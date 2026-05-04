@@ -106,6 +106,34 @@ Per integrar Proxmox, importem una plantilla específica que permet obtenir mèt
 
 ## Cluster Proxmox
 
+### Pas previ
+
+Ens em trobat una problematica al itnegrar Proxmox i es que al tenir 3 nodes si afegim els 3 rebem les alertes triplicades (ja que els tres nodes reporten alertes dels altres dos) i al només afegir només 1 perdem alta disponibilitat ja que al caure el principal i migrar-se tot al secundari o terciari la IP al a que apunta Zabbix ja no correspon.
+
+La solució ha estat instalar keepalived que ens permetra tenir una IP per al cluster que els tres nodes compartiran i en cas de que el principal tingui algun problema aquesta passara automaticament a respondre per al segon node (tot aixó conservant les seves IPs individuals que portem utilitzant tot el projecte), aixó també ens permet crear un punter DNS cap a aquesta IP del keepalived i sempre tenir accés web per aquí estigui el servidor que estigui.
+
+Procedim amb la instalació i activació del servei als 3 nodes de Proxmox:
+
+![Keepalived 1](<../imatges/03/5- keepalived (1).png>)
+![Keepalived 2](<../imatges/03/5- keepalived (2).png>)
+
+Primer configurem el node principal com `MASTER`.
+
+![Keepalived 3](<../imatges/03/5- keepalived (3).png>)
+
+I els altres dos com `BACKUP`.
+
+![Keepalived 4](<../imatges/03/5- keepalived (4).png>)
+![Keepalived 5](<../imatges/03/5- keepalived (5).png>)
+
+Amb aixó ja tenim activa la IP del keepalived, confirmem que respon:
+
+![Keepalived 5](<../imatges/03/5- keepalived (6).png>)
+
+Ara ja podem proseguir amb la integració del cluster sense problema de duplicitat d'alertes.
+
+### Integració cluster Proxmox
+
 Creem un usuari específic anomenat `zabbix` dins del domini d’autenticació de Proxmox VE. La idea és no dependre sempre de l’usuari `root`, deixant una compte més clara només per a la monitorització.
 
 ![Proxmox 1](<../imatges/03/3- proxmox (1).png>)
@@ -126,7 +154,7 @@ Ja podem crear el host per al cluster de proxmox indicant la plantilla que acabe
 
 ![Proxmox 5](<../imatges/03/3- proxmox (5).png>)
 
-Dins de Zabbix afegim les macros necessàries perquè la plantilla de Proxmox pugui connectar-se per API. Configurem el token, el secret, el host de Proxmox `172.16.0.10` i el port `8006`.
+Dins de Zabbix afegim les macros necessàries perquè la plantilla de Proxmox pugui connectar-se per API. Configurem el token, el secret, el host de Proxmox `172.16.0.4` i el port `8006`.
 
 ![Proxmox 6](<../imatges/03/3- proxmox (6).png>)
 
