@@ -1,71 +1,131 @@
-# Instal·lació i Configuració Bàsica de Zabbix
+## Instal·lació i Configuració Bàsica de Zabbix
 
-En aquesta part es documenta el procés d’instal·lació inicial del servidor Zabbix dins del projecte Hefesto. El servidor s’ha desplegat sobre una màquina Debian 12 ubicada a la xarxa LAN, amb la IP "`172.16.0.5`". Aquesta màquina actuarà com a punt central de monitorització de la infraestructura, permetent controlar servidors, serveis, dispositius de xarxa i elements del clúster Proxmox entre altres.
+En aquesta part documentem la instal·lació inicial de Zabbix dins del projecte Hefesto i la integració dels primers dispositius importants de la infraestructura. El servidor Zabbix s’ha desplegat sobre una màquina Debian 12 situada a la xarxa LAN amb la IP `172.16.0.5`. Aquesta màquina serà el punt central des d’on revisarem l’estat dels servidors, serveis, dispositius de xarxa, NAS i nodes Proxmox.
 
-Primerament instal·lem el sistema base que sera un Debian 12.
+Primerament instal·lem el sistema base de Debian 12 sobre la màquina virtual que farà de servidor Zabbix. Aquesta VM queda desplegada dins de Proxmox i serà la base sobre la qual instal·larem tots els components de monitorització.
 
-![Zabbix 1](<../imatges/03/zabbix (1).png>)
+![Zabbix 1](<../imatges/03/1- zabbix (1).png>)
 
-Ara es realitza un "`apt update`" per actualitzar la llista de repositoris del sistema. Aquest pas és important perquè Debian reconegui els paquets disponibles i també comprovi correctament el repositori de Zabbix que s’utilitzarà durant la instal·lació.
+Després configurem la IP estàtica del servidor Zabbix. En aquest cas deixem la interfície `ens18` amb la IP `172.16.0.5`, màscara `255.255.255.0`, porta d’enllaç `172.16.0.1` i DNS `172.16.0.1` i `8.8.8.8`. Això és important perquè el servidor de monitorització sempre tingui una adreça fixa dins la LAN.
 
-![Zabbix 2](<../imatges/03/zabbix (2).png>)
+![Zabbix 2](<../imatges/03/1- zabbix (2).png>)
 
-Descarreguem el paquet oficial del repositori de Zabbix per a Debian 12, primer s’intenta instal·lar sense permisos suficients i finalment s’executa correctament amb "`sudo dpkg -i`", amb això afegim el repositori oficial de Zabbix al sistema.
+Un cop tenim la xarxa preparada, fem un `apt update` per actualitzar la llista de repositoris del sistema. Així ens assegurem que Debian pot trobar els paquets necessaris i que el repositori de Zabbix quedarà carregat correctament.
 
-![Zabbix 3](<../imatges/03/zabbix (3).png>)
+![Zabbix 3](<../imatges/03/1- zabbix (3).png>)
 
-En aquesta captura s’instal·len els paquets principals necessaris per fer funcionar Zabbix. S’instal·la el servidor Zabbix amb MySQL/MariaDB, la interfície web en PHP, la configuració per Apache, els scripts SQL, l’agent de Zabbix i el servidor MariaDB. Aquest pas deixa preparada la base del servei de monitorització.
+Aquí descarreguem el paquet oficial del repositori de Zabbix per a Debian 12. Primer es veu un intent sense permisos suficients i després ja s’instal·la correctament amb `sudo dpkg -i`. Amb això afegim el repositori oficial de Zabbix al sistema.
 
-![Zabbix 4](<../imatges/03/zabbix (4).png>)
+![Zabbix 4](<../imatges/03/1- zabbix (4).png>)
 
-Aquí s’accedeix a MariaDB i es crea la base de dades `zabbix`. També es crea l’usuari de base de dades que utilitzarà Zabbix per connectar-se. Aquesta separació és correcta perquè Zabbix no treballi directament amb l’usuari administrador de MariaDB.
+Instal·lem els paquets principals que necessita Zabbix per funcionar. En aquesta ordre s’instal·la el servidor Zabbix amb suport MySQL/MariaDB, la interfície web en PHP, la configuració d’Apache, els scripts SQL, l’agent de Zabbix i MariaDB com a base de dades.
 
-![Zabbix 5](<../imatges/03/zabbix (5).png>)
+![Zabbix 5](<../imatges/03/1- zabbix (5).png>)
 
-En aquesta captura es concedeixen permisos a l’usuari de Zabbix sobre la seva base de dades. També s’activa temporalment el paràmetre `log_bin_trust_function_creators`, necessari per poder importar correctament l’esquema inicial de Zabbix a MariaDB.
+Entrem a MariaDB i creem la base de dades `zabbix`. També creem l’usuari `zabbix@localhost`, que serà el que utilitzarà el servidor Zabbix per connectar-se amb la base de dades. D’aquesta manera no fem servir l’usuari administrador per al funcionament normal del servei.
 
-![Zabbix 6](<../imatges/03/zabbix (6).png>)
+![Zabbix 6](<../imatges/03/1- zabbix (6).png>)
 
-S’importa l’estructura inicial de la base de dades de Zabbix utilitzant el fitxer SQL comprimit que proporciona el paquet `zabbix-sql-scripts`. Aquest pas crea totes les taules internes que necessita Zabbix per guardar hosts, mètriques, usuaris, alertes, esdeveniments i configuracions.
+Donem permisos a l’usuari `zabbix` sobre la seva base de dades i activem temporalment el paràmetre `log_bin_trust_function_creators`. Aquest ajust és necessari per poder importar correctament l’esquema inicial de Zabbix a MariaDB.
 
-![Zabbix 7](<../imatges/03/zabbix (7).png>)
+![Zabbix 7](<../imatges/03/1- zabbix (7).png>)
 
-S’obre el fitxer principal de configuració del servidor Zabbix, ubicat a `/etc/zabbix/zabbix_server.conf`. Aquest fitxer és necessari per indicar a Zabbix com s’ha de connectar amb la base de dades i quins paràmetres ha d’utilitzar durant el seu funcionament.
+Importem l’estructura inicial de la base de dades utilitzant el fitxer SQL comprimit que ve amb el paquet `zabbix-sql-scripts`. Aquest pas crea les taules internes que Zabbix necessita per guardar hosts, mètriques, alertes, usuaris, esdeveniments i configuracions.
 
-![Zabbix 8](<../imatges/03/zabbix (8).png>)
+![Zabbix 8](<../imatges/03/1- zabbix (8).png>)
 
-Es mostra la configuració de connexió amb la base de dades dins del fitxer `zabbix_server.conf`. S’indica el nom de la base de dades, l’usuari i la contrasenya que utilitzarà el servidor Zabbix per accedir a MariaDB.
+Obrim el fitxer principal de configuració del servidor Zabbix, ubicat a `/etc/zabbix/zabbix_server.conf`. En aquest fitxer indicarem les dades de connexió amb MariaDB perquè el servidor pugui treballar amb la base de dades que acabem de preparar.
 
-![Zabbix 9](<../imatges/03/zabbix (9).png>)
+![Zabbix 9](<../imatges/03/1- zabbix (9).png>)
 
-Es comprova de nou la configuració de la base de dades dins del fitxer de Zabbix. Es confirma que els camps principals, com `DBName`, `DBUser` i `DBPassword`, han quedat definits correctament perquè el servei pugui iniciar sense errors de connexió.
+Configurem els camps principals de connexió amb la base de dades. Definim `DBName=zabbix`, `DBUser=zabbix` i la contrasenya corresponent. Aquest pas és necessari perquè el servei `zabbix-server` pugui iniciar sense errors de connexió.
 
-![Zabbix 10](<../imatges/03/zabbix (10).png>)
+![Zabbix 10](<../imatges/03/1- zabbix (10).png>)
 
-Es revisa el fitxer de configuració d’Apache per a Zabbix. Es pot veure l’àlies `/zabbix`, que permet accedir a la interfície web des del navegador, i també la configuració de PHP, incloent la zona horària `Europe/Madrid`. Això és important perquè els esdeveniments, alertes i gràfiques tinguin l’hora correcta.
+Revisem de nou la configuració per comprovar que els paràmetres principals han quedat guardats correctament. Abans d’arrencar els serveis és important validar que el nom de la base de dades, l’usuari i la contrasenya coincideixen amb el que hem creat a MariaDB.
 
-![Zabbix 11](<../imatges/03/zabbix (11).png>)
+![Zabbix 11](<../imatges/03/1- zabbix (11).png>)
 
-S’accedeix amb el navegador a l’assistent web d’instal·lació de Zabbix mitjançant l’adreça `172.16.0.5/zabbix/setup.php`. Es selecciona l’idioma de la interfície i s’inicia la configuració final des de la part web.
+També revisem la configuració d’Apache per a Zabbix. Aquí es defineix l’àlies `/zabbix`, que permet accedir a la interfície web des del navegador, i es comproven valors de PHP com la memòria, el temps d’execució i la zona horària `Europe/Madrid`.
 
-![Zabbix 12](<../imatges/03/zabbix (12).png>)
+![Zabbix 12](<../imatges/03/1- zabbix (12).png>)
 
-Es mostra la comprovació de requisits previs de Zabbix. L’assistent valida la versió de PHP, la memòria, la mida màxima de pujada, el temps d’execució, el suport de MySQL i altres mòduls necessaris. Tots els requisits apareixen com a correctes, per tant es pot continuar amb la instal·lació.
+Accedim al navegador i obrim l’assistent web de Zabbix des de `172.16.0.5/zabbix/setup.php`. En aquest primer pas seleccionem l’idioma i comencem la configuració final des de la interfície web.
 
-![Zabbix 13](<../imatges/03/zabbix (13).png>)
+![Zabbix 13](<../imatges/03/1- zabbix (13).png>)
 
-Es configura la connexió de la interfície web de Zabbix amb la base de dades. S’indica que s’utilitzarà MySQL, el servidor `localhost`, la base de dades `zabbix`, l’usuari corresponent i la contrasenya definida anteriorment. Amb això queda enllaçada la part web amb la base de dades ja preparada.
+L’assistent comprova els requisits previs de Zabbix. Es valida la versió de PHP, la memòria, la mida màxima de pujada, el temps d’execució, el suport de MySQL i altres mòduls necessaris. Com tots els punts apareixen correctes, podem continuar.
 
-![Zabbix 14](<../imatges/03/zabbix (14).png>)
+![Zabbix 14](<../imatges/03/1- zabbix (14).png>)
 
-Es configuren els ajustos finals de l’assistent d’instal·lació. Es defineix el nom del servidor com `zabbixHefesto`, se selecciona la zona horària `Europe/Madrid` i s’escull el tema fosc per a la interfície. Aquest nom ajuda a identificar clarament el servidor dins de l’entorn Hefesto.
+Configurem la connexió de la interfície web amb la base de dades. Seleccionem MySQL, servidor `localhost`, base de dades `zabbix`, usuari `zabbix` i la contrasenya que hem definit abans. Amb això la part web ja queda connectada amb MariaDB.
 
-![Zabbix 15](<../imatges/03/zabbix (15).png>)
+![Zabbix 15](<../imatges/03/1- zabbix (15).png>)
 
-Apareix el resum de preinstal·lació. L’assistent mostra els paràmetres principals configurats: tipus de base de dades, servidor, nom de la base de dades, usuari i nom del servidor Zabbix. Aquest pas serveix per verificar que la configuració és correcta abans de finalitzar la instal·lació.
+Definim els ajustos finals del servidor. Posem el nom `zabbixHefesto`, seleccionem la zona horària `Europe/Madrid` i deixem el tema fosc per treballar més còmodament amb la interfície.
 
-![Zabbix 16](<../imatges/03/zabbix (16).png>)
+![Zabbix 16](<../imatges/03/1- zabbix (16).png>)
 
-Finalment, es mostra que la interfície web de Zabbix s’ha instal·lat correctament. L’assistent confirma que s’ha creat el fitxer de configuració `conf/zabbix.conf.php`, de manera que la instal·lació web queda finalitzada i el servidor Zabbix ja està preparat per iniciar sessió i començar la configuració dels hosts i la monitorització.
+Abans d’instal·lar, revisem el resum de preinstal·lació. Aquí comprovem que la base de dades és MySQL, que el servidor és `localhost`, que la base de dades es diu `zabbix`, que l’usuari és correcte i que el servidor queda identificat com `zabbixHefesto`.
 
-![Zabbix 17](<../imatges/03/zabbix (17).png>)
+![Zabbix 17](<../imatges/03/1- zabbix (17).png>)
+
+Finalment, l’assistent confirma que la interfície web de Zabbix s’ha instal·lat correctament i que s’ha creat el fitxer `conf/zabbix.conf.php`. Amb això ja podem entrar a Zabbix i començar a donar d’alta els dispositius de la infraestructura.
+
+![Zabbix 18](<../imatges/03/1- zabbix (18).png>)
+
+Com a preparació per treballar amb logs del sistema, comprovem que `rsyslog` està actiu al servidor Zabbix. Aquest servei ens servirà més endavant per poder rebre o gestionar registres d’altres equips si volem centralitzar logs o relacionar-los amb la monitorització.
+
+![Rsyslog 1](<../imatges/03/4- rsyslog (1).png>)
+
+Després de deixar Zabbix instal·lat, comencem amb la integració del NAS. Afegim el host de TrueNAS dins de Zabbix amb el nom `truenas` i el nom visible `NAS-Hefesto-1`. Inicialment li assignem una interfície SNMP amb la IP `172.16.0.9`, que és la IP del NAS dins la xarxa.
+
+![NAS 1](<../imatges/03/2- nas (1).png>)
+
+Abans de monitoritzar el NAS, comprovem des de TrueNAS que el servei SNMP està en execució. També veiem que NFS està actiu, ja que aquest NAS també forma part de l’entorn d’emmagatzematge del projecte.
+
+![NAS 2](<../imatges/03/2- nas (2).png>)
+
+A Zabbix intentem vincular el NAS amb una plantilla SNMP adequada. En aquest punt treballem amb plantilles preparades per TrueNAS/FreeNAS, ja que ens permeten obtenir informació del sistema sense haver de crear manualment tots els ítems.
+
+![NAS 3](<../imatges/03/2- nas (3).png>)
+
+Configurem el servei SNMP dins de TrueNAS. Activem el suport SNMP v3, definim l’usuari, el tipus d’autenticació SHA i el protocol de privacitat AES. Aquesta configuració és més segura que utilitzar només una comunitat simple de SNMP v2.
+
+![NAS 4](<../imatges/03/2- nas (4).png>)
+
+Ajustem la configuració del host NAS dins de Zabbix, deixant la plantilla `SNMP FreeNAS`, el grup `NAS`, la IP `172.16.0.9`, el port `161` i la comunitat SNMP mitjançant macro. Amb això Zabbix ja pot consultar dades del NAS per SNMP.
+
+![NAS 5](<../imatges/03/2- nas (5).png>)
+
+Un cop el NAS queda monitoritzat, Zabbix ja comença a generar avisos. En aquest cas apareixen alertes relacionades amb temperatures de discos i amb l’estat d’un pool. Aquestes alertes ens serveixen per comprovar que la integració funciona i que Zabbix està rebent informació real del NAS.
+
+![NAS 6](<../imatges/03/2- nas (6).png>)
+
+Per integrar Proxmox, importem una plantilla específica que permet obtenir mètriques de la plataforma de virtualització. Aquesta plantilla ens ajudarà a monitoritzar nodes, màquines virtuals, recursos i l’estat general de l’entorn Proxmox des de Zabbix.
+
+![Proxmox 1](<../imatges/03/3- proxmox (1).png>)
+
+A Proxmox preparem un token d’API perquè Zabbix pugui consultar informació sense haver d’iniciar sessió manualment. Primer provem la creació del token des de l’apartat de permisos de Proxmox.
+
+![Proxmox 2](<../imatges/03/3- proxmox (2).png>)
+
+Després de crear el token, Proxmox mostra el secret una única vegada. Guardem aquest valor perquè després serà necessari posar-lo a les macros del host dins de Zabbix.
+
+![Proxmox 3](<../imatges/03/3- proxmox (3).png>)
+
+Dins de Zabbix afegim les macros necessàries perquè la plantilla de Proxmox pugui connectar-se per API. Configurem el token, el secret, el host de Proxmox `172.16.0.10` i el port `8006`.
+
+![Proxmox 4](<../imatges/03/3- proxmox (4).png>)
+
+També creem un usuari específic anomenat `zabbix` dins del domini d’autenticació de Proxmox VE. La idea és no dependre sempre de l’usuari `root`, deixant una compte més clara només per a la monitorització.
+
+![Proxmox 5](<../imatges/03/3- proxmox (5).png>)
+
+Amb l’usuari preparat, creem un nou token associat a `zabbix@pve`. Aquest token serà el que utilitzarem finalment perquè Zabbix consulti Proxmox d’una manera més neta i separada de l’usuari administrador.
+
+![Proxmox 6](<../imatges/03/3- proxmox (6).png>)
+
+Finalment, Proxmox ens mostra el secret del token `zabbix@pve:zabbix`. Aquest valor el guardem per configurar-lo a Zabbix i deixar preparada la comunicació per API entre el servidor de monitorització i Proxmox.
+
+![Proxmox 7](<../imatges/03/3- proxmox (7).png>)
