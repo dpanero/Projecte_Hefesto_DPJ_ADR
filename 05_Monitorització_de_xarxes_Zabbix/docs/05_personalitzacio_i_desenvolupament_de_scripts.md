@@ -23,7 +23,20 @@ També s'han deixat els hosts amb noms clars i fàcils d’identificar, per exem
 
 ## Desenvolupament de scripts personalitzats
 
+### Script per monitoritzar Suricata i PfSense
 
+Em creat un script a `/etc/rsyslog.d/30—pfsense.conf` on indiquem de quina IP ha de rebre els logs i on els gardara, indiquem en el nostre cas la IP del PfSense `172.16.0.1` i l'arxiu de logs `/var/log/pfsense.log`.
+Gràcies a aquest Script podem rebre els logs que hem configurat per enviar desde pfsense/suricata al projecte d'IDS/IPS i obtenir-los com un item del host zabbix [Clica aquí per anar a l'explicació](https://github.com/dpanero/Projecte_Hefesto_DPJ_ADR/blob/main/05_Monitoritzaci%C3%B3_de_xarxes_Zabbix/docs/03_instal_lacio_i_configuracio_basica.md#pfsense-i-suricata).
+
+![Rsyslog 4](<../imatges/03/4- rsyslog (4).png>)
+
+### Script per monitoritzar el servidor Web de la DMZ
+
+Per ampliar la monitorització més enllà de les plantilles per defecte, he creat un script personalitzat per al servidor web del projecte Hefesto. Aquest script comprova l’estat real d’Apache, el codi HTTP retornat per la web, la configuració del servei, els errors recents, les respostes HTTP 5xx, l’ús del directori `/var/www` i una puntuació general de salut del servidor.
+
+La integració amb Zabbix s’ha fet mitjançant `UserParameter`, de manera que el Zabbix Agent executa el script localment al servidor web i retorna els valors al servidor Zabbix. Això permet tenir mètriques adaptades al nostre entorn, en lloc de dependre només de les plantilles genèriques.
+
+Finalment, aquests valors s’han convertit en ítems i triggers dins de Zabbix, permetent generar alertes quan Apache cau, quan la web no respon correctament, quan hi ha massa errors o quan el health score baixa d’un valor acceptable.
 
 ---
 
