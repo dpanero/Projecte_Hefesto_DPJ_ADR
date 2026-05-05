@@ -55,7 +55,7 @@ Finalment confirmem que rebem les alertes, en aquest cas el llindar de memoria q
 
 ---
 
-## Propi servidor Zabbix
+## Servidor Zabbix
 
 Aquest no cal canviar res ja que ve configurat correctament de manera automatica al instal·lar-se, el canvi que nosaltres em fet es la configuració dels logs pfsense que em mostrat anteriorment.
 
