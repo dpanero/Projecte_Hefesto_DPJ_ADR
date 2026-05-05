@@ -57,7 +57,7 @@ Finalment confirmem que rebem les alertes, en aquest cas el llindar de memoria q
 
 ## Servidor Zabbix
 
-Aquest no cal canviar res ja que ve configurat correctament de manera automatica al instal·lar-se, el canvi que nosaltres em fet es la configuració dels logs pfsense que em mostrat anteriorment.
+Aquest no cal canviar res ja que ve configurat correctament de manera automatica al instal·lar-se, el canvi que nosaltres em fet es la configuració dels logs pfsense que em mostrat anteriorment. ![Clica aquí per anar a la explicació](https://github.com/dpanero/Projecte_Hefesto_DPJ_ADR/blob/main/05_Monitoritzaci%C3%B3_de_xarxes_Zabbix/docs/03_instal_lacio_i_configuracio_basica.md#pfsense-i-suricata)
 
 ![Rsyslog 6.2](<../imatges/03/4- rsyslog (6).png>)
 ![Rsyslog 8.2](<../imatges/03/4- rsyslog (8).png>)
