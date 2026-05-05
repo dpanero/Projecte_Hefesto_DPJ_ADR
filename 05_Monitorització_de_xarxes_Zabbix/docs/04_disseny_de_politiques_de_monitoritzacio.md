@@ -57,7 +57,9 @@ Finalment confirmem que rebem les alertes, en aquest cas el llindar de memoria q
 
 ## Propi servidor Zabbix
 
-Aquest no cal canviar res ja que ve configurat correctament de manera automatica al instal·lar-se, el canvi que nosaltres em fet es la configuració dels logs pfsense que em mostrat anteriorment.
+Aquest no cal canviar res ja que ve configurat correctament de manera automatica al instal·lar-se.
+
+El canvi que nosaltres em fet es la configuració dels logs pfsense que em mostrat anteriorment.
 
 ![Rsyslog 6.2](<../imatges/03/4- rsyslog (6).png>)
 ![Rsyslog 8.2](<../imatges/03/4- rsyslog (8).png>)
