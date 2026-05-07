@@ -6,13 +6,6 @@
 
 ShopMicro és una plataforma fictícia de comerç electrònic que ven productes tecnològics. Aquest projecte simula la migració d'una aplicació monolítica a una arquitectura de **microserveis containeritzats**, passant per quatre fases progressives de complexitat: desenvolupament local, alta disponibilitat, seguretat i producció amb Kubernetes.
 
-## Autor
-
-- **Nom**: Axel Rodríguez
-- **Curs**: 2 ASIR
-- **Centre**: [Nom del centre]
-- **Data**: Maig 2026
-
 ## Arquitectura general
 
 La plataforma es compon de **9 serveis** containeritzats:
@@ -34,19 +27,19 @@ La plataforma es compon de **9 serveis** containeritzats:
 
 Aquest repositori conté la documentació completa del projecte dividida en quatre fases:
 
-### [Fase 1 — Docker Compose (Desenvolupament)](./fase1.md)
+### [Fase 1 — Docker Compose (Desenvolupament)](ShopMicro-FASE1/fase1.md)
 
 Containerització de tots els serveis i orquestració amb Docker Compose en un entorn de desenvolupament local. S'inclou la configuració de xarxes internes, volums persistents, healthchecks i el desenvolupament del frontend amb tres fluxos funcionals demostrables.
 
-### [Fase 2 — Docker Swarm (Alta disponibilitat)](./fase2.md)
+### [Fase 2 — Docker Swarm (Alta disponibilitat)](ShopMicro-FASE2/fase2.md)
 
 Migració de Docker Compose a un clúster Docker Swarm format per 3 nodes (1 manager + 2 workers). S'aplica l'arquitectura de rèpliques, restart policies i rolling updates. S'inclouen proves de tolerància a fallades i escalat en calent.
 
-### [Fase 3 — Seguretat](./fase3.md)
+### [Fase 3 — Seguretat](ShopMicro-FASE3/fase3.md)
 
 Aplicació de mesures de seguretat al clúster Swarm: migració de credencials a Docker Secrets, aïllament de xarxes overlay seguint el principi de mínim privilegi, anàlisi del TLS automàtic entre nodes amb CA interna, i escaneig de vulnerabilitats amb Docker Scout.
 
-### [Fase 4 — Kubernetes (Producció)](./fase4.md)
+### [Fase 4 — Kubernetes (Producció)](ShopMicro-FASE4/fase4.md)
 
 Migració de l'arquitectura a Kubernetes per a l'entorn de producció. *(Pendent d'execució)*
 

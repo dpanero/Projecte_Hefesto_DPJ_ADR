@@ -235,7 +235,7 @@ Cada paràmetre té el seu propòsit:
 - `--memory=4096`: assigna 4 GB de RAM.
 - `--kubernetes-version=v1.30.0`: fixa la versió de Kubernetes que demana l'enunciat.
 
-![minikube start](capturas/fase4/04_minikube_start.png)
+![minikube start](capturas/Imatge10.png)
 
 ### Pas 5 — Verificar el clúster
 
@@ -250,7 +250,9 @@ kubectl get nodes
 kubectl get pods -n kube-system
 ```
 
-![minikube status i nodes](capturas/fase4/05_minikube_status.png)
+![minikube status i nodes1](capturas/Imatge11.png)
+![minikube status i nodes2](capturas/Imatge12.png)
+![minikube status i nodes3](capturas/Imatge13.png)
 
 ### Pas 6 — Activar el dashboard
 
@@ -259,14 +261,18 @@ minikube addons enable dashboard
 minikube addons enable metrics-server
 ```
 
+![Dashboard de Minikube1](capturas/Imatge14.png)
+![Dashboard de Minikube2](capturas/Imatge15.png)
+
+
 Per obrir-lo:
 
 ```bash
 minikube dashboard
 ```
 
-![Dashboard de Minikube](capturas/fase4/06_minikube_dashboard.png)
-
+![Dashboard de Minikube1](capturas/Imatge16.png)
+![Dashboard de Minikube2](capturas/Imatge17.png)
 ---
 
 ## Tasca 21 — Crear el namespace shopmicro
@@ -275,7 +281,7 @@ Un **namespace** a Kubernetes és una carpeta lògica per agrupar i aïllar recu
 
 ### Manifest
 
-📄 [`k8s/namespace/namespace.yaml`](k8s/namespace/namespace.yaml)
+[`k8s/namespace/namespace.yaml`](k8s/namespace/namespace.yaml)
 
 ### Aplicar i verificar
 
@@ -289,7 +295,9 @@ kubectl get namespaces
 kubectl describe namespace shopmicro
 ```
 
-![Namespace creat](capturas/fase4/07_namespace.png)
+![Namespace creat](capturas/Imatge46.png)
+![Namespace creat](capturas/Imatge47.png)
+![Namespace creat](capturas/Imatge48.png)
 
 ---
 
@@ -335,7 +343,13 @@ mkdir -p k8s/generated
 kompose convert -f docker-compose-k8s.yml --out k8s/generated/
 ```
 
-![Conversió amb kompose](capturas/fase4/08_kompose_convert.png)
+![Conversió amb kompose](capturas/Imatge19.png)
+![Conversió amb kompose](capturas/Imatge20.png)
+![Conversió amb kompose](capturas/Imatge21.png)
+
+![Conversió amb kompose](capturas/Imatge23.png)
+![Conversió amb kompose](capturas/Imatge24.png)
+
 
 Kompose ha generat la base dels Deployments i els PersistentVolumeClaims. A continuació s'han ajustat manualment per afegir tot el que kompose no pot traduir (probes, secrets, configmaps, init containers).
 
@@ -515,7 +529,10 @@ kubectl apply -f k8s/generated/
 kubectl apply -f k8s/services/
 ```
 
-![kubectl apply tots els recursos](capturas/fase4/09_kubectl_apply.png)
+![kubectl apply tots els recursos](capturas/Imatge25.png)
+![kubectl apply tots els recursos](capturas/Imatge26.png)
+![kubectl apply tots els recursos](capturas/Imatge27.png)
+![kubectl apply tots els recursos](capturas/Imatge28.png)
 
 ### Pas 2 — Verificar que tots els pods estan Running
 
@@ -526,7 +543,7 @@ kubectl get pods -n shopmicro -o wide
 
 Cal esperar entre 1 i 3 minuts fins que tots els pods estiguin `1/1 Running`. Les bases de dades i RabbitMQ tarden més perquè els seus `initialDelaySeconds` de les probes són majors.
 
-![Pods Running](capturas/fase4/10_pods_running.png)
+![Pods Running](capturas/Imatge49.png)
 
 ### Pas 3 — Verificar tots els Services
 
@@ -534,7 +551,7 @@ Cal esperar entre 1 i 3 minuts fins que tots els pods estiguin `1/1 Running`. Le
 kubectl get services -n shopmicro
 ```
 
-![Services del namespace](capturas/fase4/11_services.png)
+![Services del namespace](capturas/Imatge29.png)
 
 ### Pas 4 — Detalls del product-service
 
@@ -542,7 +559,7 @@ kubectl get services -n shopmicro
 kubectl describe deployment product-service -n shopmicro
 ```
 
-![Describe product-service](capturas/fase4/12_describe_product_service.png)
+![Describe product-service](capturas/Imatge30.png)
 
 ### Pas 5 — Vista global de tots els recursos
 
@@ -550,7 +567,7 @@ kubectl describe deployment product-service -n shopmicro
 kubectl get all -n shopmicro
 ```
 
-![Vista global de tots els recursos](capturas/fase4/13_get_all.png)
+![Vista global de tots els recursos](capturas/Imatge31.png)
 
 ### Pas 6 — Obrir el túnel i accedir a la web
 
@@ -562,7 +579,7 @@ minikube tunnel
 
 Ara obre el navegador a `http://localhost:8080`.
 
-![Frontend funcionant](capturas/fase4/14_frontend_obert.png)
+![Frontend funcionant](capturas/Imatge33.png)
 
 ---
 
@@ -594,7 +611,8 @@ docker build -t arodriguez5/shopmicro-product-service:1.2 ./product-service
 docker push arodriguez5/shopmicro-product-service:1.2
 ```
 
-![docker push de la 1.2](capturas/fase4/15_docker_push_v12.png)
+![docker push de la 1.2](capturas/Imatge35.png)
+![docker push de la 1.2](capturas/Imatge36.png)
 
 ### Pas 3 — Actualitzar el manifest
 
@@ -638,9 +656,10 @@ Gràcies a `maxSurge: 1` i `maxUnavailable: 0`, Kubernetes segueix aquest procé
 
 En cap moment hi ha menys de 2 pods disponibles → **zero downtime**.
 
-![Rolling update — pods canviant](capturas/fase4/16_rolling_update_pods.png)
+![Rolling update — pods canviant](capturas/Imatge37.png)
+![Rolling update — pods canviant](capturas/Imatge38.png)
 
-![Rolling update — successfully rolled out](capturas/fase4/17_rolling_update_status.png)
+![Rolling update — successfully rolled out](capturas/fase4/Imatge39.png)
 
 ### Pas 5 — Verificar la nova versió
 
@@ -652,17 +671,10 @@ kubectl describe deployment product-service -n shopmicro | grep Image
 kubectl exec -n shopmicro deployment/api-gateway -- \
   wget -qO- http://product-service:5000/version
 
-# Veure el missatge d'arrencada als logs
-kubectl logs -n shopmicro -l app=product-service --tail=5
 ```
 
-Sortida esperada del `/version`:
-
-```json
-{"service": "product-service", "version": "1.2"}
-```
-
-![Verificació /version](capturas/fase4/18_version_endpoint.png)
+![Verificació /version](capturas/Imatge50.png)
+![Verificació /version](capturas/Imatge51.png)
 
 ### Pas 6 — Històric del rollout
 
@@ -672,19 +684,13 @@ Una característica que Docker Swarm no té i Kubernetes sí és l'històric de 
 kubectl rollout history deployment/product-service -n shopmicro
 ```
 
-```
-REVISION  CHANGE-CAUSE
-1         <none>
-2         <none>
-```
-
 Si calgués tornar a la versió anterior, seria tan senzill com:
 
 ```bash
 kubectl rollout undo deployment/product-service -n shopmicro
 ```
 
-![Històric del rollout](capturas/fase4/19_rollout_history.png)
+![Històric del rollout](capturas/Imatge52.png)
 
 ---
 
@@ -700,17 +706,17 @@ Un cop desplegada tota l'arquitectura a Kubernetes, es verifiquen els mateixos t
 2. Clicar **"Carregar productes"** per primera vegada → la cache de Redis és buida, el `product-service` consulta `db-products` directament.
 3. Clicar **"Carregar productes"** una segona vegada dins dels 60 segons → el `product-service` troba les dades a Redis i les retorna des de la cache.
 
-![Flux 1 — Origen DB](capturas/fase4/20_flux1_origen_db.png)
+![Flux 1 — Origen DB](capturas/Imatge40.png)
 
-![Flux 1 — Origen Redis](capturas/fase4/21_flux1_origen_cache.png)
+![Flux 1 — Origen Redis](capturas/Imatge41.png)
 
 **Verificació amb logs:**
 
 ```bash
-kubectl logs -n shopmicro -l app=product-service --tail=20
+kubectl logs -n shopmicro -l app=product-service --tail=10
 ```
 
-![Flux 1 — Logs product-service](capturas/fase4/22_flux1_logs.png)
+![Flux 1 — Logs product-service](capturas/Imatge45.png)
 
 ### Flux 2 — Creació de comanda amb missatge asíncron a RabbitMQ
 
@@ -719,7 +725,7 @@ kubectl logs -n shopmicro -l app=product-service --tail=20
 1. A la secció "Crear comanda", seleccionar un producte i una quantitat.
 2. Clicar **"Comprar"** → apareix el missatge "Comanda creada" amb un ID.
 
-![Flux 2 — Comanda creada](capturas/fase4/23_flux2_comanda.png)
+![Flux 2 — Comanda creada](capturas/Imatge43.png)
 
 **Verificació del flux complet amb logs:**
 
@@ -736,10 +742,6 @@ Ha d'aparèixer la notificació del missatge consumit de RabbitMQ:
 ![Flux 2 — Logs notification-service](capturas/fase4/24_flux2_logs_notification.png)
 
 Això confirma el flux complet: el `order-service` ha publicat el missatge a RabbitMQ i el `notification-service`, que viu en un pod completament separat, l'ha consumit i registrat correctament.
-
-**Verificació de l'historial:**
-
-![Flux 2 — Historial de comandes](capturas/fase4/25_flux2_historial.png)
 
 ### Flux 3 — Self-healing (tolerància a fallades)
 
@@ -773,21 +775,11 @@ product-service-xxx-ccc            0/1     Running       0          3s
 product-service-xxx-ccc            1/1     Running       0          13s  ← torna a haver-hi 2
 ```
 
-![Flux 3 — Self-healing](capturas/fase4/26_flux3_selfhealing.png)
+![Flux 3 — Self-healing](capturas/Imatge54.png)
 
 Durant tot el procés, l'altra rèplica continua servint peticions. Es pot verificar tornant al navegador i clicant "Carregar productes" mentre el pod estava `Terminating`: el servei segueix responent sense cap tall.
 
-![Flux 3 — Frontend funcionant durant el self-healing](capturas/fase4/27_flux3_frontend_ok.png)
-
-### Vista global al dashboard de Minikube
-
-```bash
-minikube dashboard
-```
-
-Al desplegable de namespace, seleccionar `shopmicro` i anar a la secció **Deployments**. Tots han d'aparèixer en verd.
-
-![Dashboard final](capturas/fase4/28_dashboard_final.png)
+![Flux 3 — Frontend funcionant durant el self-healing](capturas/Imatge55.png)
 
 ---
 
