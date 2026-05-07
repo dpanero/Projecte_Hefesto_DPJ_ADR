@@ -57,6 +57,9 @@ Finalment confirmem que rebem les alertes, en aquest cas el llindar de memoria q
 
 # Servidor WEB
 
+Com em mostrat al apartat de `instal·lació / configutació` s'ha afegit un host per monitoritzar el servidor web. [Clica aquí per veure la instal·lació](https://github.com/dpanero/Projecte_Hefesto_DPJ_ADR/blob/main/05_Monitoritzaci%C3%B3_de_xarxes_Zabbix/docs/04_disseny_de_politiques_de_monitoritzacio.md#disseny-de-pol%C3%ADtiques-de-monitoritzaci%C3%B3)
+Aquest l'administrem a través d'un script personalitzat.
+
 ![Trigger WEB 1](<../imatges/04/5- tweb (1).png>)
 
 ---
