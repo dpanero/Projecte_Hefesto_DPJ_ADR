@@ -89,6 +89,38 @@ Resultat:
 
 
 
+![dahsboards 23](<../imatges/06/dashboards (23).png>)
+
+Resultat:
+
+![dahsboards 24](<../imatges/06/dashboards (24).png>)
+
+
+
+![dahsboards 25](<../imatges/06/dashboards (25).png>)
+
+Resultat:
+
+![dahsboards 26](<../imatges/06/dashboards (26).png>)
+
+
+
+![dahsboards 27](<../imatges/06/dashboards (27).png>)
+
+Resultat:
+
+![dahsboards 28](<../imatges/06/dashboards (28).png>)
+
+
+
+![dahsboards 29](<../imatges/06/dashboards (29).png>)
+
+Resultat:
+
+![dahsboards 30](<../imatges/06/dashboards (30).png>)
+
+
+
 ![dahsboards 10](<../imatges/06/dashboards (10).png>)
 
 Resultat:
