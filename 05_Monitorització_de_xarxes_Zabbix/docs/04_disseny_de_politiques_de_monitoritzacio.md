@@ -55,16 +55,60 @@ Finalment confirmem que rebem les alertes, en aquest cas el llindar de memoria q
 
 ---
 
-# Servidor WEB
+## Servidor WEB
 
 Com em mostrat al apartat de `instal·lació / configutació` s'ha afegit un host per monitoritzar el servidor web. 
 - [Clica aquí per veure la instal·lació](https://github.com/dpanero/Projecte_Hefesto_DPJ_ADR/blob/main/05_Monitoritzaci%C3%B3_de_xarxes_Zabbix/docs/03_instal_lacio_i_configuracio_basica.md#servidor-web)
 Aquest l'administrem a través d'un script personalitzat. 
 - [Clica aquí per veure la explicació del script](https://github.com/dpanero/Projecte_Hefesto_DPJ_ADR/blob/main/05_Monitoritzaci%C3%B3_de_xarxes_Zabbix/docs/05_personalitzacio_i_desenvolupament_de_scripts.md#desenvolupament-de-scripts-personalitzats)
 
-El primer que fare sera crear una plantilla personalitzada per donar-li al servidor web. Per fer-ho vaig a `Data collection > Templates > Create template`.
+### Plantilla personalitzada
+
+El primer que fare sera crear una plantilla personalitzada per donar-li al servidor web. 
+Per fer-ho vaig a `Data collection > Templates > Create template`.
 
 ![Trigger WEB 1](<../imatges/04/5- tweb (1).png>)
+
+### Items
+
+Ara dins de la plantilla creo els items necessaris per cada key de les que estem recollint amb l'script mostrat al enllaç anterior.
+
+Aquí hem creat l’ítem `Hefesto - Apache actiu`, que utilitza la key `hefesto.web.apache`. Aquesta comprovació serveix per saber si el servei Apache està funcionant correctament al servidor web. El valor esperat és `1` quan Apache està actiu i `0` quan el servei està aturat. Aquesta key és important perquè Apache és el servei principal que permet servir la web.
+
+![Trigger WEB 2](<../imatges/04/5- tweb (2).png>)
+
+Aquí hem creat l’ítem `Hefesto - Codi HTTP local`, que utilitza la key `hefesto.web.http_code`. Aquesta comprovació fa una petició local a la web i retorna el codi HTTP obtingut. Si tot funciona correctament, el valor normal hauria de ser `200`. Si retorna un codi `4xx` o `5xx`, ens indicaria que la web no està responent com toca.
+
+![Trigger WEB 3](<../imatges/04/5- tweb (3).png>)
+
+
+Aquí hem creat l’ítem `Hefesto - Config Apache correcta`, que utilitza la key `hefesto.web.configtest`. Aquesta comprovació executa una validació de la configuració d’Apache per saber si els fitxers de configuració són correctes. Retorna `1` si la configuració és vàlida i `0` si hi ha algun error. Això és útil perquè un error de configuració podria impedir reiniciar o carregar Apache correctament.
+
+![Trigger WEB 4](<../imatges/04/5- tweb (4).png>)
+
+
+Aquí hem creat l’ítem `Hefesto - Errors Apache recents`, que utilitza la key `hefesto.web.errors`. Aquesta comprovació revisa els últims registres del fitxer d’errors d’Apache i compta possibles errors recents. Amb això podem detectar si la web està generant problemes encara que el servei continuï funcionant.
+
+![Trigger WEB 5](<../imatges/04/5- tweb (5).png>)
+
+
+Aquí hem creat l’ítem `Hefesto - Processos Apache`, que utilitza la key `hefesto.web.processes`. Aquesta comprovació compta quants processos d’Apache hi ha en execució. Ens serveix per veure si Apache està realment treballant i també per detectar situacions estranyes, com que no hi hagi processos o que n’hi hagi massa.
+
+![Trigger WEB 6](<../imatges/04/5- tweb (6).png>)
+
+
+Aquí hem creat l’ítem `Hefesto - Respostes HTTP 5xx`, que utilitza la key `hefesto.web.5xx`. Aquesta comprovació revisa el log d’accés d’Apache i compta les respostes de tipus `5xx`, que normalment indiquen errors del servidor. És una mètrica útil perquè pot detectar errors interns encara que la màquina segueixi encesa i Apache continuï actiu.
+
+![Trigger WEB 7](<../imatges/04/5- tweb (7).png>)
+
+
+Aquí hem creat l’ítem `Hefesto - Ús disc /var/www`, que utilitza la key `hefesto.web.disk_www`. Aquesta comprovació mira el percentatge d’ús del disc on es troba el directori `/var/www`. És important controlar aquest punt perquè si el disc s’omple, la web podria deixar de guardar fitxers, logs o funcionar correctament.
+
+![Trigger WEB 8](<../imatges/04/5- tweb (8).png>)
+
+Aquí podem veure ja els 7 items actius:
+
+![Trigger WEB 9](<../imatges/04/5- tweb (9).png>)
 
 ---
 
