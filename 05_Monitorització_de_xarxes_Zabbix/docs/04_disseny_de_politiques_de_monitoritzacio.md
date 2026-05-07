@@ -57,7 +57,7 @@ Finalment confirmem que rebem les alertes, en aquest cas el llindar de memoria q
 
 # Servidor WEB
 
-![Trigger WEB 1](<../imatges/04/7- tweb (1).png>)
+![Trigger WEB 1](<../imatges/04/5- tweb (1).png>)
 
 ---
 
