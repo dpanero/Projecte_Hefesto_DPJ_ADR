@@ -121,5 +121,5 @@ Finalment, hem creat un informe periòdic anomenat `Informe setmanal Hefesto`, c
 
 ---
 
-## ploració de les capacitats de generació d'informes de l'eina
+## Exploració de les capacitats de generació d'informes de l'eina
 
