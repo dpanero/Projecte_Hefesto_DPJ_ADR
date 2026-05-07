@@ -31,6 +31,8 @@ Resultat:
 
 ![dahsboards 13](<../imatges/06/dashboards (13).png>)
 
+---
+
 ## Dashboards per al Cluster Proxmox
 
 El primer widget que em creat al dashboard per al proxmox és el més important ja que em configurat de manera que depenent de si el status del node en concret és 1 o 0 ens diura si esta o no Online, fem servir el tipus "Top Host" per poder fer servir una columna per cada node.
@@ -66,6 +68,8 @@ Resultat:
 
 ![dahsboards 17](<../imatges/06/dashboards (17).png>)
 
+---
+
 ## Dashboards per al NAS
 
 El primer widget que creem es per saber l'estat del NAS de igual manera que em fet amb Proxmox i en el mateix widget em afegit el total del espai de la pool de les maquines virtuals `poolvms` i el que ja tenim actualment en ús.
@@ -93,6 +97,8 @@ Resultat:
 Resultat:
 
 ![dahsboards 20](<../imatges/06/dashboards (20).png>)
+
+---
 
 ## Dashboards per la WEB de la DMZ
 
@@ -146,6 +152,8 @@ Hora del servidor Zabbix:
 Resultat:
 
 ![dahsboards 22](<../imatges/06/dashboards (22).png>)
+
+---
 
 ## Resultat del dashboard amb tots els widgets afegits
 
