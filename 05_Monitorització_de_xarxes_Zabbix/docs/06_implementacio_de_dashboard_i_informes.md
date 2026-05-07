@@ -114,7 +114,7 @@ Resultat:
 
 ![dahsboards 26](<../imatges/06/dashboards (26).png>)
 
-
+Ara de igual manera un altre `Item Value` per veure el % d'ús d'apache sobre el directori `/var/www`.
 
 ![dahsboards 27](<../imatges/06/dashboards (27).png>)
 
@@ -122,7 +122,7 @@ Resultat:
 
 ![dahsboards 28](<../imatges/06/dashboards (28).png>)
 
-Ara de igual manera un altre `Item Value` per veure el % d'ús d'apache sobre el directori `/var/www`.
+Finalment fem un de tipus `Plain text` per tal de mostrar tot el resum de dades que recollim de la web graciés al item que em creat anomenat `Hefesto - Resum Web` es mostrara de igual manera que em fet amb Suricata i PfSense.
 
 ![dahsboards 29](<../imatges/06/dashboards (29).png>)
 
@@ -130,7 +130,8 @@ Resultat:
 
 ![dahsboards 30](<../imatges/06/dashboards (30).png>)
 
-
+Per acabar vull afegir 2 opcions interesants integrades amb el zabbix que són en primer lloc la ubicació geografica dels equips i la hora actual del servidor Zabbix.
+Geolocalització maquines:
 
 ![dahsboards 10](<../imatges/06/dashboards (10).png>)
 
@@ -138,13 +139,18 @@ Resultat:
 
 ![dahsboards 21](<../imatges/06/dashboards (21).png>)
 
-
+Hora del servidor Zabbix:
 
 ![dahsboards 11](<../imatges/06/dashboards (11).png>)
 
 Resultat:
 
 ![dahsboards 22](<../imatges/06/dashboards (22).png>)
+
+## Resultat del dashboard amb tots els widgets afegits
+
+![dahsboards 31](<../imatges/06/dashboards (31).png>)
+![dahsboards 32](<../imatges/06/dashboards (32).png>)
 
 ---
 
