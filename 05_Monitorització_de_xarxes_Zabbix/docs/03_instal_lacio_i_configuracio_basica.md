@@ -237,7 +237,6 @@ Ara farem servir un script personalitzat amb parts de codi que em trobat que per
 
 [Clica aquí per veure la explicació del script](https://github.com/dpanero/Projecte_Hefesto_DPJ_ADR/blob/main/05_Monitoritzaci%C3%B3_de_xarxes_Zabbix/docs/05_personalitzacio_i_desenvolupament_de_scripts.md#desenvolupament-de-scripts-personalitzats)
 
-
 Dono permís d'execució al script que em creat.
 
 ![sweb 8](<../imatges/03/7- wserver (8).png>)
@@ -247,7 +246,7 @@ Per fer-ho creo l'arxiu `/etc/zabbix/zabbix_agentd.d/hefesto_web.conf`.
 
 ![sweb 9](<../imatges/03/7- wserver (9).png>)
 
-Reinicio el l'agent Zabbix i comprovo que esta actiu.
+Reinicio l'agent Zabbix i comprovo que esta actiu.
 
 ![sweb 10](<../imatges/03/7- wserver (10).png>)
  
@@ -255,6 +254,10 @@ Finalment, aquests valors s’han convertit en ítems i triggers dins de Zabbix,
 Per fer-ho primer instal·lo el zabbix-get al servidor zabbix.
 
 ![sweb 11](<../imatges/03/7- wserver (11).png>)
+
+Ara faig una prova de que puc rebre dades de la web.
+
+![sweb 12](<../imatges/03/7- wserver (12).png>)
 
 Ara he de crear el host de zabbix al apartat `Data collection > Hosts > Create host`, el faig amb els parametres següents:
 - Host name: web
@@ -264,11 +267,11 @@ Ara he de crear el host de zabbix al apartat `Data collection > Hosts > Create h
 - IP address: 10.0.0.10
 - Port: 10050
 
-![sweb 12](<../imatges/03/7- wserver (12).png>)
+![sweb 13](<../imatges/03/7- wserver (13).png>)
 
-Finalment ja puc crear els triggers
+Finalment ja puc crear els triggers i la plantilla personalitzada, aixó ho revisarem al apartat de `Disseny de politiques de monitorització`.
 
-
+[Clica per veure la creació de la plantilla i dels triggers per al servidor web](https://github.com/dpanero/Projecte_Hefesto_DPJ_ADR/blob/main/05_Monitoritzaci%C3%B3_de_xarxes_Zabbix/docs/04_disseny_de_politiques_de_monitoritzacio.md#servidor-web)
 
 ---
 

@@ -1,7 +1,7 @@
 # Disseny de Polítiques de Monitorització
 
 En aquest apartat configurarem les polítiques de monitorització dels diferents hosts en funció del dispositiu que són, ho treballarem a través del que ens han generat cada plantilla de les que em fet servir.
-Anirem revisant un a un els 3 hosts, el PfSense i Suricata els rebem a través de rsyslog pel host Zabbix i per tant ja son items d'aquest.
+Anirem revisant un a un els 4 hosts que em creat al apartat anterior, el PfSense i Suricata els rebem a través de rsyslog pel host Zabbix i per tant ja son items d'aquest.
 
 Primerament s'han establert els grups de hosts per tal de tenir separats els diferents tipus de dispositiu, en aquest cas només tenim un host de cada tipus.
 
