@@ -1,5 +1,7 @@
 # Implementació de Dashboard i Informes
 
+[Tornar al inici de Zabbix](/05_Monitorització_de_xarxes_Zabbix/README.md)
+
 En aquest apartat es mostra com hem utilitzat els dashboards de Zabbix per centralitzar la informació més important de la infraestructura Hefesto en una sola vista. L’objectiu no és només veure dades soltes, sinó tenir una pantalla general que permeti entendre ràpidament l’estat dels serveis, detectar problemes i comprovar si els elements principals del projecte funcionen correctament.
 
 El dashboard creat reuneix informació de diferents parts de l’entorn: l’estat general del servidor Zabbix, els problemes actius, els avisos recents, el clúster de Proxmox, l’ús de CPU i RAM dels nodes, l’estat del NAS TrueNAS i també els logs rebuts de Suricata i pfSense. D’aquesta manera podem veure en temps real tant la part de monitorització de sistemes com la part de seguretat i xarxa.
@@ -211,3 +213,9 @@ Finalment, hem creat un informe periòdic anomenat `Informe setmanal Hefesto`, c
 Ara per acabar amb aquest apartat procedirem a clicar en la opció de `Test` per confirmar que efectivament ja rebem els correus amb els reports a les direccions de correu que em indicat.
 
 ![informes 12](<../imatges/06/informes (12).png>)
+
+---
+
+## Següent apartat
+
+[Proves i Validació](docs/07_proves_i_validacio.md)

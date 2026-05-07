@@ -1,5 +1,7 @@
 # Disseny de Polítiques de Monitorització
 
+[Tornar al inici de Zabbix](/05_Monitorització_de_xarxes_Zabbix/README.md)
+
 En aquest apartat configurarem les polítiques de monitorització dels diferents hosts en funció del dispositiu que són, ho treballarem a través del que ens han generat cada plantilla de les que em fet servir.
 Anirem revisant un a un els 4 hosts que em creat al apartat anterior, el PfSense i Suricata els rebem a través de rsyslog pel host Zabbix i per tant ja son items d'aquest.
 
@@ -197,3 +199,8 @@ El canvi que nosaltres em fet es la configuració dels logs pfsense que em mostr
 ![Rsyslog 6.2](<../imatges/03/4- rsyslog (6).png>)
 ![Rsyslog 8.2](<../imatges/03/4- rsyslog (8).png>)
 
+---
+
+## Següent apartat
+
+[Personalització i Desenvolupament de Scripts](docs/05_personalitzacio_i_desenvolupament_de_scripts.md)

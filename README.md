@@ -36,7 +36,7 @@ La infraestructura està composta per:
 
 ---
 
-# Index
+# Index de projectes
 
 | Projecte | Descripció |
 |---------|------------|

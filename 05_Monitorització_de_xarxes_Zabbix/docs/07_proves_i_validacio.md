@@ -1,5 +1,7 @@
 # Proves i Validació
 
+[Tornar al inici de Zabbix](/05_Monitorització_de_xarxes_Zabbix/README.md)
+
 En aquest apartat hem fet diferents proves controlades per comprovar que la monitorització configurada a Zabbix funciona correctament. La idea ha estat provocar errors reals dins de l'entorn Hefesto i validar que Zabbix els detecta, els mostra al dashboard i genera els avisos corresponents.
 
 Les proves principals que hem fet han estat sobre el servidor web, el clúster de Proxmox i alguns llindars de rendiment, com l'ús elevat de CPU d'una màquina virtual.
@@ -56,3 +58,9 @@ Després d'aturar el servei, Zabbix detecta que la web ja no respon correctament
 Amb aquestes proves hem comprovat que la monitorització configurada és funcional i útil per detectar problemes reals dins de l'entorn Hefesto. Zabbix ha estat capaç de detectar la caiguda del servei web, la recuperació posterior, l'apagada d'un node Proxmox i l'ús elevat de CPU d'una màquina virtual.
 
 Això confirma que els dashboards, triggers i items configurats no només mostren informació visual, sinó que també permeten reaccionar davant incidències reals de la infraestructura.
+
+---
+
+[Tornar al inici de Zabbix](/05_Monitorització_de_xarxes_Zabbix/README.md)
+
+[Tornar al inici de Hefesto](/README.md)

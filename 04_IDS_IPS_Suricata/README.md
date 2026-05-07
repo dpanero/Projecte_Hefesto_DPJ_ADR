@@ -1,5 +1,7 @@
 # IDS / IPS - Suricata
 
+[Tornar al inici de Hefesto](/README.md)
+
 <p align="center">
 <img src="imatges/logo_suricata.png" width="200">
 </p>
@@ -30,6 +32,19 @@ Desplegar un sistema IDS/IPS que permeti:
 - simular atacs per validar el sistema
 
 Aquest sistema ajuda a reforçar la seguretat de la infraestructura del laboratori.
+
+---
+
+# Index de documentació i manuals de Suricata
+
+| Document | Descripció |
+|---------|------------|
+| [Instal·lació del Firewall](docs/03_Instalacio_del_Firewall.pdf) | Instal·lació i configuració d'un firewall PFsense, a partir d'aquest sortira tot el projecte |
+| [Instal·lació del sistema IDS/IPS](docs/04_Installacio_i_Configuracio_Basica_de_Suricat.pdf) | Instal·lació i configuració de Suricata com a sistema IDS/IPS al nostre firewall pfsense |
+| [Definició de politiques de seguretat](docs/05_Definicio_de_Politiques_de_Seguretat.pdf) | Definició de politiques de seguretat i aplicació d'aquestes al nostre sistema |
+| [Analisis dels Logs i Alertes](docs/06_Analisi_de_Logs_i_Alertes.pdf) | Analisis dels Logs i Alertes generats per Suricata |
+| [Simulació d'atacs i resposta](docs/07_Simulacio_d_Atacs_i_Resposta.pdf) | Simulem un atac a la nostra xarxa per verificar el funcionament del sistema de resposta |
+| [Configuració de sistemes complementaris](docs/08_Configuracio_de_Sistemes_Complementaris.pdf) | Explicació de tots els sistemes complementaris que hem afegit per millorar la seguretat de la nostra xarxa |
 
 ---
 
@@ -71,17 +86,3 @@ D’aquesta manera podem aprofitar el pfsense que muntarem a la nostra xarxa fen
 
 ## Justificacions de la nostra elecció
 Investigant s’ha arribat a la conclusió que la millor opció a treballar es Suricata ja que es troba molta documentació i tutorials sobre el funcionament, es potent i aprofita molt bé les CPUs de alta gama, també s’ha dubtat entre instal·lar el servei dins del pfsense o fer un servidor dedicat, finalment em vist que en petites empreses o entorns amb un tràfic moderat com el nostre laboratori, el Suricata com a servei de pfsense es perfecte ja que d’aquesta manera aprofitem la gestió unificada de Firewall/IPS i no malgastem més hardware en un servidor dedicat, el qual només aprofitaríem en una xarxa de alt rendiment (10Gbps+) o si tenim el Firewall saturat, en el nostre cas seria excessiu.
-
----
-
-# Documentació i manuals
-
-| Document | Descripció |
-|---------|------------|
-| [Instal·lació del Firewall](docs/03_Instalacio_del_Firewall.pdf) | Instal·lació i configuració d'un firewall PFsense, a partir d'aquest sortira tot el projecte |
-| [Instal·lació del sistema IDS/IPS](docs/04_Installacio_i_Configuracio_Basica_de_Suricat.pdf) | Instal·lació i configuració de Suricata com a sistema IDS/IPS al nostre firewall pfsense |
-| [Definició de politiques de seguretat](docs/05_Definicio_de_Politiques_de_Seguretat.pdf) | Definició de politiques de seguretat i aplicació d'aquestes al nostre sistema |
-| [Analisis dels Logs i Alertes](docs/06_Analisi_de_Logs_i_Alertes.pdf) | Analisis dels Logs i Alertes generats per Suricata |
-| [Simulació d'atacs i resposta](docs/07_Simulacio_d_Atacs_i_Resposta.pdf) | Simulem un atac a la nostra xarxa per verificar el funcionament del sistema de resposta |
-| [Configuració de sistemes complementaris](docs/08_Configuracio_de_Sistemes_Complementaris.pdf) | Explicació de tots els sistemes complementaris que hem afegit per millorar la seguretat de la nostra xarxa |
----
