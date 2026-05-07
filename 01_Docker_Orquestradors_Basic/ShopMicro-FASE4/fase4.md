@@ -176,7 +176,7 @@ docker --version
 docker ps
 ```
 
-![Verificació de Docker](capturas/fase4/01_docker_version.png)
+![Verificació de Docker](capturas/Imatge1.png)
 
 ### Pas 2 — Instal·lar kubectl
 
@@ -194,8 +194,9 @@ sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 kubectl version --client
 ```
 
-![kubectl instal·lat](capturas/fase4/02_kubectl_version.png)
-
+![kubectl instal·lat1](capturas/Imatge3.png)
+![kubectl instal·lat2](capturas/Imatge4.png)
+![kubectl instal·lat3](capturas/Imatge5.png)
 ### Pas 3 — Instal·lar Minikube
 
 ```bash
@@ -210,7 +211,10 @@ rm minikube-linux-amd64
 minikube version
 ```
 
-![Minikube instal·lat](capturas/fase4/03_minikube_version.png)
+![Minikube instal·lat1](capturas/Imatge6.png)
+![Minikube instal·lat2](capturas/Imatge7.png)
+![Minikube instal·lat3](capturas/Imatge8.png)
+![Minikube instal·lat4](capturas/Imatge9.png)
 
 ### Pas 4 — Arrencar el clúster
 
