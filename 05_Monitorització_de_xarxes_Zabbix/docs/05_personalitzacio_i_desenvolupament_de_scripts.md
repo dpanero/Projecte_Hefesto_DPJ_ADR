@@ -52,6 +52,8 @@ Les keys personalitzades creades són les següents:
 | `hefesto.web.processes` | Compta els processos actius d’Apache | Nombre de processos Apache |
 | `hefesto.web.5xx` | Compta respostes HTTP 5xx recents | Nombre d’errors de servidor |
 | `hefesto.web.disk_www` | Comprova l’ús del disc del directori `/var/www` | Percentatge d’ús |
+| `hefesto.web.score` | Calcula una puntuació general de salut del servidor web a partir de diferents valors que em definit al script | Salut del servidor |
+| `hefesto.web.summary` | Recull diferents valors dels configurats al script | Retorna un resum en format text amb l’estat general del servidor web |
 
 Amb aquesta personalització aconseguim una monitorització més adaptada al projecte. No depenem només de les plantilles genèriques de Zabbix, sinó que afegim comprovacions pròpies pensades per al servidor web d’Hefesto.
 

@@ -106,9 +106,17 @@ Aquí hem creat l’ítem `Hefesto - Ús disc /var/www`, que utilitza la key `he
 
 ![Trigger WEB 8](<../imatges/04/5- tweb (8).png>)
 
-Aquí podem veure ja els 7 items actius:
+Aquí hem creat l’ítem `Hefesto - Health Score Web`, que utilitza la key `hefesto.web.score`. Aquesta comprovació calcula una puntuació general de salut del servidor web a partir de diferents valors del script, com l’estat d’Apache, el codi HTTP, la configuració del servei, errors recents, respostes `5xx` i ús del disc web. El resultat és un valor numèric, on una puntuació alta indica que el servei està funcionant correctament i una puntuació baixa ens avisa que hi ha algun problema a revisar.
 
 ![Trigger WEB 9](<../imatges/04/5- tweb (9).png>)
+
+Aquí hem creat l’ítem `Hefesto - Resum Web`, que utilitza la key `hefesto.web.summary`. Aquest ítem retorna un resum en format text amb l’estat general del servidor web. Ens serveix per veure ràpidament diferents valors del script en una sola línia, com si Apache està actiu, quin codi HTTP retorna la web, si la configuració és correcta, quants errors recents hi ha i la puntuació general del servidor. Aquest ítem no està pensat tant per generar alertes directes, sinó per tenir una vista ràpida i més llegible de l’estat del servei.
+
+![Trigger WEB 10](<../imatges/04/5- tweb (10).png>)
+
+Aquí podem veure ja els 9 items actius:
+
+![Trigger WEB 11](<../imatges/04/5- tweb (11).png>)
 
 ---
 
