@@ -68,13 +68,17 @@ Resultat:
 
 ## Dashboards per al NAS
 
+El primer widget que creem es per saber l'estat del NAS de igual manera que em fet amb Proxmox i en el mateix widget em afegit el total del espai de la pool de les maquines virtuals `poolvms` i el que ja tenim actualment en ús.
+
 ![dahsboards 7](<../imatges/06/dashboards (7).png>)
 
 Resultat:
 
 ![dahsboards 18](<../imatges/06/dashboards (18).png>)
 
+Ara tal com s'ha explicat amb anterioritat em generat 2 widgets de tipus `Plain text` un per mostrar els logs que rebem de Suricata i un altre per a tots els que genera PfSense.
 
+- Logs Suricata:
 
 ![dahsboards 8](<../imatges/06/dashboards (8).png>)
 
@@ -82,7 +86,7 @@ Resultat:
 
 ![dahsboards 19](<../imatges/06/dashboards (19).png>)
 
-
+- Logs PfSense
 
 ![dahsboards 9](<../imatges/06/dashboards (9).png>)
 
@@ -90,7 +94,11 @@ Resultat:
 
 ![dahsboards 20](<../imatges/06/dashboards (20).png>)
 
+## Dashboards per la WEB de la DMZ
 
+Per fer els widgets de la web aprofitarem els items que em creat amb les keys que enviem desde el script mostrat anteriorment.
+
+El primer de tot es aprofitar l'item que em creat com `Hefesto - Apache actiu` per mostrar si esta o no encés en funció de si el script retorna 1 o 2 tal com em fet a proxmox pero en aquest cas de manera "manual".
 
 ![dahsboards 23](<../imatges/06/dashboards (23).png>)
 
@@ -98,7 +106,7 @@ Resultat:
 
 ![dahsboards 24](<../imatges/06/dashboards (24).png>)
 
-
+Ara creem un `Item Value` per recollir la salut de la web que em processat desde el script per tenir-la visible en pantalla.
 
 ![dahsboards 25](<../imatges/06/dashboards (25).png>)
 
@@ -114,7 +122,7 @@ Resultat:
 
 ![dahsboards 28](<../imatges/06/dashboards (28).png>)
 
-
+Ara de igual manera un altre `Item Value` per veure el % d'ús d'apache sobre el directori `/var/www`.
 
 ![dahsboards 29](<../imatges/06/dashboards (29).png>)
 
