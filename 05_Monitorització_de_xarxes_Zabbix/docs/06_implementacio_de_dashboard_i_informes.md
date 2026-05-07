@@ -105,7 +105,7 @@ Resultat:
 
 ---
 
-## Confi guració d'Informes periòdics
+## Configuració d'Informes periòdics
 
 En aquest apartat hem configurat la part d’informes de Zabbix per poder generar resums periòdics de l’estat de la infraestructura Hefesto. La idea no és només mirar les dades en temps real, sinó poder tenir un informe automàtic que resumeixi l’estat general del sistema durant un període concret.
 

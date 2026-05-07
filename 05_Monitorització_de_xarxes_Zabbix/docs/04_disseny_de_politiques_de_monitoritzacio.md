@@ -182,7 +182,7 @@ Aquest es el resultat amb tots els triggers creats:
 
 ![Trigger ús alt del directori web](<../imatges/04/5- tweb (19).png>)
 
-Ara ja puc crear els dashboards | [Clica per veure la creació dels dashboards]()
+Ara ja puc crear els dashboards | [Clica per veure la creació dels diferents dashboards per a les informacions que rebem de cada host](https://github.com/dpanero/Projecte_Hefesto_DPJ_ADR/blob/main/05_Monitoritzaci%C3%B3_de_xarxes_Zabbix/docs/06_implementacio_de_dashboard_i_informes.md#implementaci%C3%B3-de-dashboard-i-informes)
 
 `Comprovacions al apartat final de la documentació`
 
