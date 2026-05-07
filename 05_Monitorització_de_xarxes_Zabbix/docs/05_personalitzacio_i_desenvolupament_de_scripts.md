@@ -32,11 +32,147 @@ Gràcies a aquest Script podem rebre els logs que hem configurat per enviar desd
 
 ### Script per monitoritzar el servidor Web de la DMZ
 
-Per ampliar la monitorització més enllà de les plantilles per defecte, he creat un script personalitzat per al servidor web del projecte Hefesto. Aquest script comprova l’estat real d’Apache, el codi HTTP retornat per la web, la configuració del servei, els errors recents, les respostes HTTP 5xx, l’ús del directori `/var/www` i una puntuació general de salut del servidor.
+Per ampliar la monitorització més enllà de les plantilles per defecte, he creat un script personalitzat per al servidor web del projecte Hefesto. 
+Aquest script comprova l’estat real d’Apache, el codi HTTP retornat per la web, la configuració del servei, els errors recents, les respostes HTTP 5xx, l’ús del directori `/var/www` i una puntuació general de salut del servidor.
 
-La integració amb Zabbix s’ha fet mitjançant `UserParameter`, de manera que el Zabbix Agent executa el script localment al servidor web i retorna els valors al servidor Zabbix. Això permet tenir mètriques adaptades al nostre entorn, en lloc de dependre només de les plantilles genèriques.
+[Clica aquí per veure com s'ha configurat el servidor web amb l'agent de Zabbix](https://github.com/dpanero/Projecte_Hefesto_DPJ_ADR/blob/main/05_Monitoritzaci%C3%B3_de_xarxes_Zabbix/docs/03_instal_lacio_i_configuracio_basica.md#servidor-web)
 
-Finalment, aquests valors s’han convertit en ítems i triggers dins de Zabbix, permetent generar alertes quan Apache cau, quan la web no respon correctament, quan hi ha massa errors o quan el health score baixa d’un valor acceptable.
+Contingut del script:
+
+```
+#!/bin/bash
+
+MODE="$1"
+
+apache_service() {
+    systemctl is-active --quiet apache2
+    if [ $? -eq 0 ]; then
+        echo 1
+    else
+        echo 0
+    fi
+}
+
+http_code() {
+    curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1/ --max-time 5
+}
+
+apache_configtest() {
+    apache2ctl configtest >/dev/null 2>&1
+    if [ $? -eq 0 ]; then
+        echo 1
+    else
+        echo 0
+    fi
+}
+
+apache_errors() {
+    if [ -f /var/log/apache2/error.log ]; then
+        tail -n 200 /var/log/apache2/error.log 2>/dev/null | grep -iE "error|crit|fail" | wc -l
+    else
+        echo 0
+    fi
+}
+
+apache_5xx() {
+    if [ -f /var/log/apache2/access.log ]; then
+        tail -n 200 /var/log/apache2/access.log 2>/dev/null | awk '$9 ~ /^5/ {c++} END {print c+0}'
+    else
+        echo 0
+    fi
+}
+
+www_disk() {
+    df -P /var/www 2>/dev/null | awk 'NR==2 {gsub("%","",$5); print $5}'
+}
+
+apache_processes() {
+    pgrep -fc apache2
+}
+
+health_score() {
+    SCORE=100
+
+    SERVICE=$(apache_service)
+    CODE=$(http_code)
+    CONFIG=$(apache_configtest)
+    ERRORS=$(apache_errors)
+    HTTP5XX=$(apache_5xx)
+    DISK=$(www_disk)
+
+    if [ "$SERVICE" -eq 0 ]; then
+        SCORE=$((SCORE-35))
+    fi
+
+    if [ "$CODE" -lt 200 ] || [ "$CODE" -ge 400 ]; then
+        SCORE=$((SCORE-25))
+    fi
+
+    if [ "$CONFIG" -eq 0 ]; then
+        SCORE=$((SCORE-20))
+    fi
+
+    if [ "$ERRORS" -gt 10 ]; then
+        SCORE=$((SCORE-10))
+    fi
+
+    if [ "$HTTP5XX" -gt 5 ]; then
+        SCORE=$((SCORE-10))
+    fi
+
+    if [ "$DISK" -gt 80 ]; then
+        SCORE=$((SCORE-10))
+    fi
+
+    if [ "$SCORE" -lt 0 ]; then
+        SCORE=0
+    fi
+
+    echo "$SCORE"
+}
+
+summary() {
+    echo "apache=$(apache_service) http=$(http_code) config=$(apache_configtest) errors=$(apache_errors) http5xx=$(apache_5xx) disk_www=$(www_disk) processes=$(apache_processes) score=$(health_score)"
+}
+
+case "$MODE" in
+    apache)
+        apache_service
+        ;;
+    http_code)
+        http_code
+        ;;
+    configtest)
+        apache_configtest
+        ;;
+    errors)
+        apache_errors
+        ;;
+    5xx)
+        apache_5xx
+        ;;
+    disk_www)
+        www_disk
+        ;;
+    processes)
+        apache_processes
+        ;;
+    score)
+        health_score
+        ;;
+    summary)
+        summary
+        ;;
+    *)
+        echo "Usage: $0 {apache|http_code|configtest|errors|5xx|disk_www|processes|score|summary}"
+        exit 1
+        ;;
+esac
+```
+
+
+
+
 
 ---
 

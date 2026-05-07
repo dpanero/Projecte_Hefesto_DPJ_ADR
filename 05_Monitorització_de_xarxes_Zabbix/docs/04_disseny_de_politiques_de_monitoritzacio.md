@@ -55,6 +55,12 @@ Finalment confirmem que rebem les alertes, en aquest cas el llindar de memoria q
 
 ---
 
+# Servidor WEB
+
+![Trigger WEB 1](<../imatges/04/7- tweb (1).png>)
+
+---
+
 ## Servidor Zabbix
 
 Aquest no cal canviar res ja que ve configurat correctament de manera automatica al instal·lar-se.

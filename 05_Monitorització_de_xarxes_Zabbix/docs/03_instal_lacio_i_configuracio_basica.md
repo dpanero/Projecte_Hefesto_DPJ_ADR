@@ -201,7 +201,7 @@ Creem un altre item del host zabbix per als logs generals de pfsense.
 
 ## Servidor WEB
 
-Ara integrarem amb Zabbix el nostre servidor Web que tenim virtualitzat a la DMZ per tal de poder-lo també monitoritzar.
+Ara integrarem amb Zabbix el nostre servidor Web que tenim virtualitzat a la DMZ per tal de poder-lo també monitoritzar, en comptes de fer servir les plantilles de Zabbix per apache crearem els nostres scripts propis.
 
 Primer de tot accedeixo per SSH al servidor web.
 
@@ -231,143 +231,44 @@ Donem permís a mirar logs del sistema a l'usauri zabbix per tal que pugiu repor
 
 ![sweb 7](<../imatges/03/7- wserver (7).png>)
 
-Ara crearem un script personalitzat al directori `/usr/local/bin/` anomenat `hefesto_web_health.sh`.
+Ara farem servir un script personalitzat amb parts de codi que em trobat que permeten monitoritzar diferents aspectes del nostre servidor apache, ubiquem el Script al directori `/usr/local/bin/` i en el nostre cas l'anomenem `hefesto_web_health.sh`.
 
-[(Clica aquí per veure la explicació completa del script | Apartat de desenvolupament de Scripts)](https://github.com/dpanero/Projecte_Hefesto_DPJ_ADR/blob/main/05_Monitoritzaci%C3%B3_de_xarxes_Zabbix/docs/05_personalitzacio_i_desenvolupament_de_scripts.md#desenvolupament-de-scripts-personalitzats)
+### Contingut del script i explicacions sobre el funcionament d'aquest al apartat "Desenvolupament de Scripts":
 
-### Contingut del Script
+[Clica aquí per veure la explicació del script](https://github.com/dpanero/Projecte_Hefesto_DPJ_ADR/blob/main/05_Monitoritzaci%C3%B3_de_xarxes_Zabbix/docs/05_personalitzacio_i_desenvolupament_de_scripts.md#desenvolupament-de-scripts-personalitzats)
 
-```
 
-#!/bin/bash
+Dono permís d'execució al script que em creat.
 
-MODE="$1"
+![sweb 8](<../imatges/03/7- wserver (8).png>)
 
-apache_service() {
-    systemctl is-active --quiet apache2
-    if [ $? -eq 0 ]; then
-        echo 1
-    else
-        echo 0
-    fi
-}
+La integració amb Zabbix s’ha fet mitjançant `UserParameter`, de manera que el Zabbix Agent executa el script localment al servidor web i retorna els valors al servidor Zabbix. Això permet tenir mètriques adaptades al nostre entorn, en lloc de dependre només de les plantilles genèriques que ja n'hi han per apache.
+Per fer-ho creo l'arxiu `/etc/zabbix/zabbix_agentd.d/hefesto_web.conf`.
 
-http_code() {
-    curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1/ --max-time 5
-}
+![sweb 9](<../imatges/03/7- wserver (9).png>)
 
-apache_configtest() {
-    apache2ctl configtest >/dev/null 2>&1
-    if [ $? -eq 0 ]; then
-        echo 1
-    else
-        echo 0
-    fi
-}
+Reinicio el l'agent Zabbix i comprovo que esta actiu.
 
-apache_errors() {
-    if [ -f /var/log/apache2/error.log ]; then
-        tail -n 200 /var/log/apache2/error.log 2>/dev/null | grep -iE "error|crit|fail" | wc -l
-    else
-        echo 0
-    fi
-}
+![sweb 10](<../imatges/03/7- wserver (10).png>)
+ 
+Finalment, aquests valors s’han convertit en ítems i triggers dins de Zabbix, permetent generar alertes quan Apache cau, quan la web no respon correctament, quan hi ha massa errors o quan el health score baixa d’un valor acceptable.
+Per fer-ho primer instal·lo el zabbix-get al servidor zabbix.
 
-apache_5xx() {
-    if [ -f /var/log/apache2/access.log ]; then
-        tail -n 200 /var/log/apache2/access.log 2>/dev/null | awk '$9 ~ /^5/ {c++} END {print c+0}'
-    else
-        echo 0
-    fi
-}
+![sweb 11](<../imatges/03/7- wserver (11).png>)
 
-www_disk() {
-    df -P /var/www 2>/dev/null | awk 'NR==2 {gsub("%","",$5); print $5}'
-}
+Ara he de crear el host de zabbix al apartat `Data collection > Hosts > Create host`, el faig amb els parametres següents:
+- Host name: web
+- Visible name: WEB-Hefesto
+- Host groups: Linux servers
+- Interfaces: Agent
+- IP address: 10.0.0.10
+- Port: 10050
 
-apache_processes() {
-    pgrep -fc apache2
-}
+![sweb 12](<../imatges/03/7- wserver (12).png>)
 
-health_score() {
-    SCORE=100
+Finalment ja puc crear els triggers
 
-    SERVICE=$(apache_service)
-    CODE=$(http_code)
-    CONFIG=$(apache_configtest)
-    ERRORS=$(apache_errors)
-    HTTP5XX=$(apache_5xx)
-    DISK=$(www_disk)
 
-    if [ "$SERVICE" -eq 0 ]; then
-        SCORE=$((SCORE-35))
-    fi
-
-    if [ "$CODE" -lt 200 ] || [ "$CODE" -ge 400 ]; then
-        SCORE=$((SCORE-25))
-    fi
-
-    if [ "$CONFIG" -eq 0 ]; then
-        SCORE=$((SCORE-20))
-    fi
-
-    if [ "$ERRORS" -gt 10 ]; then
-        SCORE=$((SCORE-10))
-    fi
-
-    if [ "$HTTP5XX" -gt 5 ]; then
-        SCORE=$((SCORE-10))
-    fi
-
-    if [ "$DISK" -gt 80 ]; then
-        SCORE=$((SCORE-10))
-    fi
-
-    if [ "$SCORE" -lt 0 ]; then
-        SCORE=0
-    fi
-
-    echo "$SCORE"
-}
-
-summary() {
-    echo "apache=$(apache_service) http=$(http_code) config=$(apache_configtest) errors=$(apache_errors) http5xx=$(apache_5xx) disk_www=$(www_disk) processes=$(apache_processes) score=$(health_score)"
-}
-
-case "$MODE" in
-    apache)
-        apache_service
-        ;;
-    http_code)
-        http_code
-        ;;
-    configtest)
-        apache_configtest
-        ;;
-    errors)
-        apache_errors
-        ;;
-    5xx)
-        apache_5xx
-        ;;
-    disk_www)
-        www_disk
-        ;;
-    processes)
-        apache_processes
-        ;;
-    score)
-        health_score
-        ;;
-    summary)
-        summary
-        ;;
-    *)
-        echo "Usage: $0 {apache|http_code|configtest|errors|5xx|disk_www|processes|score|summary}"
-        exit 1
-        ;;
-esac
-```
 
 ---
 
