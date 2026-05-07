@@ -118,6 +118,74 @@ Aquí podem veure ja els 9 items actius:
 
 ![Trigger WEB 11](<../imatges/04/5- tweb (11).png>)
 
+Ara vinculem aquesta plantilla al host del servidor web que hem creat.
+
+![Trigger WEB 12](<../imatges/04/5- tweb (12).png>)
+
+### Triggers
+
+Ara el següent pas es configurar els triggers de la plantilla per rebre diferents alertes.
+Per fer-ho dins de la plantilla anem a `Triggers > Create trigger`.
+
+Aquí hem creat el trigger `Hefesto Web: Apache no està actiu`. Aquest trigger comprova si el servei Apache està funcionant al servidor web. La key `hefesto.web.apache` retorna `1` quan Apache està actiu i `0` quan està aturat.
+
+L’expressió utilitzada és `last(/web/hefesto.web.apache)=0`.
+
+Això vol dir que si l’últim valor rebut és `0`, Zabbix interpreta que Apache no està en marxa i genera una alerta de severitat `High`, ja que si Apache cau, la web deixa de funcionar.
+
+![Trigger Apache no està actiu](<../imatges/04/5- tweb (13).png>)
+
+Aquí hem creat el trigger `Hefesto Web: La web no respon correctament`. Aquest trigger revisa el codi HTTP que retorna la web local. En una situació normal, la web hauria de retornar un codi `200`, indicant que respon correctament.
+
+L’expressió utilitzada és `last(/web/hefesto.web.http_code)<200 or last(/web/hefesto.web.http_code)>=400`.
+
+Amb aquesta expressió indiquem que si el codi HTTP és inferior a `200` o és igual o superior a `400`, Zabbix generarà una alerta. Això permet detectar errors com pàgines no trobades, errors interns del servidor o problemes de resposta de la web.
+
+![Trigger web no respon correctament](<../imatges/04/5- tweb (14).png>)
+
+
+Aquí hem creat el trigger `Hefesto Web: La configuració d'Apache no és correcta`. Aquest trigger utilitza la key `hefesto.web.configtest`, que comprova si la configuració d’Apache és vàlida.
+
+L’expressió utilitzada és `last(/web/hefesto.web.configtest)=0`.
+
+Si el valor és `0`, significa que la validació de configuració d’Apache ha fallat. Això no sempre vol dir que la web hagi caigut en aquell moment, però sí que pot impedir reiniciar Apache correctament o aplicar canvis nous. Per això l’hem deixat amb severitat `Average`.
+
+![Trigger configuració Apache incorrecta](<../imatges/04/5- tweb (15).png>)
+
+
+Aquí hem creat el trigger `Hefesto Web: Health score baix`. Aquest trigger revisa la puntuació general de salut del servidor web. Aquesta puntuació surt del nostre script personalitzat i resumeix diferents comprovacions, com l’estat d’Apache, el codi HTTP, la configuració, errors recents i ús del disc.
+
+L’expressió utilitzada és `last(/web/hefesto.web.score)<70`.
+
+Amb aquesta condició, si la puntuació baixa de `70`, Zabbix genera una alerta. Aquest trigger és útil perquè no depèn d’un únic valor, sinó que ens dona una visió general de si el servei web està començant a tenir problemes.
+
+![Trigger health score baix](<../imatges/04/5- tweb (16).png>)
+
+Aquí hem creat el trigger `Hefesto Web: Massa errors HTTP 5xx`. Aquest trigger comprova si la web està generant massa errors de servidor. Els codis `5xx` normalment indiquen errors interns, problemes amb Apache, amb el backend o amb alguna part del servei web.
+
+L’expressió utilitzada és `last(/web/hefesto.web.5xx)>5`.
+
+Això vol dir que si el nombre d’errors `5xx` recents és superior a `5`, Zabbix generarà una alerta de tipus `Warning`. No ho hem posat com a crític directament perquè pot ser un error puntual, però sí que és una senyal que s’ha de revisar.
+
+![Trigger massa errors HTTP 5xx](<../imatges/04/5- tweb (17).png>)
+
+
+Aquí hem creat el trigger `Hefesto Web: Ús alt del directori web`. Aquest trigger controla l’ús del disc on es troba el directori `/var/www`, que és on normalment es guarden els fitxers de la web.
+
+L’expressió utilitzada és `last(/web/hefesto.web.disk_www)>80`.
+
+Amb aquesta expressió, si l’ús del directori web supera el `80%`, Zabbix genera una alerta de severitat `Warning`. Això ens permet detectar amb temps si el servidor web comença a quedar-se sense espai abans que arribi a un punt crític.
+
+![Trigger ús alt del directori web](<../imatges/04/5- tweb (18).png>)
+
+Aquest es el resultat amb tots els triggers creats:
+
+![Trigger ús alt del directori web](<../imatges/04/5- tweb (19).png>)
+
+Ara ja puc crear els dashboards | [Clica per veure la creació dels dashboards]()
+
+`Comprovacions al apartat final de la documentació`
+
 ---
 
 ## Servidor Zabbix
