@@ -34,4 +34,3 @@ Crear una infraestructura virtual capaç de:
 - configurar xarxes virtuals
 - desplegar serveis dins del laboratori
 
-a

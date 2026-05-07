@@ -70,4 +70,3 @@ El canvi que nosaltres em fet es la configuració dels logs pfsense que em mostr
 ![Rsyslog 6.2](<../imatges/03/4- rsyslog (6).png>)
 ![Rsyslog 8.2](<../imatges/03/4- rsyslog (8).png>)
 
-aa
