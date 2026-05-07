@@ -162,7 +162,7 @@ Resultat:
 
 ---
 
-## Configuració d'Informes periòdics
+## Configuració d'Informes periòdics i Exploració de les capacitats de generació d'informes de l'eina
 
 En aquest apartat hem configurat la part d’informes de Zabbix per poder generar resums periòdics de l’estat de la infraestructura Hefesto. La idea no és només mirar les dades en temps real, sinó poder tenir un informe automàtic que resumeixi l’estat general del sistema durant un període concret.
 
@@ -173,10 +173,4 @@ Per activar aquesta funcionalitat hem instal·lat el component `zabbix-web-servi
 També hem configurat la `Frontend URL`, indicant l’adreça completa de la interfície web de Zabbix. Aquest pas és important perquè el servei de reports pugui accedir al dashboard i convertir-lo en informe.
 
 Finalment, hem creat un informe periòdic anomenat `Informe setmanal Hefesto`, configurat per generar-se setmanalment i enviar un resum de l’estat de monitorització. Amb això podem revisar l’evolució general del sistema sense haver d’entrar manualment cada vegada a totes les pantalles de Zabbix.
-
-
-
----
-
-## Exploració de les capacitats de generació d'informes de l'eina
 

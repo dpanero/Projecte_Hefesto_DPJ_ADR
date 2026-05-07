@@ -189,8 +189,3 @@ case "$MODE" in
         ;;
 esac
 ```
-
----
-
-## Integració de plugins addicionals
-
