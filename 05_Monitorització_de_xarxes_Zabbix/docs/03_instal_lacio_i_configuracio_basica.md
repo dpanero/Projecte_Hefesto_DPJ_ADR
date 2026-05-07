@@ -1,5 +1,7 @@
 # Instal·lació i Configuració Bàsica de Zabbix
 
+[Tornar al inici de Zabbix](/05_Monitorització_de_xarxes_Zabbix/README.md)
+
 En aquesta part documentem la instal·lació inicial de Zabbix dins del projecte Hefesto i la integració dels primers dispositius importants de la infraestructura. El servidor Zabbix s’ha desplegat sobre una màquina Debian 12 situada a la xarxa LAN amb la IP `172.16.0.5`. Aquesta màquina serà el punt central des d’on revisarem l’estat dels servidors, serveis, dispositius de xarxa, NAS i nodes Proxmox.
 
 Primerament instal·lem el sistema base de Debian 12 sobre la màquina virtual que farà de servidor Zabbix, aquesta VM queda desplegada dins de Proxmox i serà la base sobre la qual instal·larem tots els components de monitorització.
@@ -283,3 +285,9 @@ A les següents captures es demostren tots els hosts i els items que em creat a 
 ![Comprov 2](<../imatges/03/6- comprov (2).png>)
 ![Comprov 3](<../imatges/03/6- comprov (3).png>)
 ![Comprov 4](<../imatges/03/6- comprov (4).png>)
+
+---
+
+## Següent apartat
+
+[Disseny de Polítiques de Monitorització](/05_Monitorització_de_xarxes_Zabbix/docs/04_disseny_de_politiques_de_monitoritzacio.md)

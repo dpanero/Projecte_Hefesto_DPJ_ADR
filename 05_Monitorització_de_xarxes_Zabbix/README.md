@@ -1,5 +1,7 @@
 # Monitorització de xarxa - Zabbix
 
+[Tornar al inici de Hefesto](/README.md)
+
 <p align="center">
 <img src="imatges/logo_zabbix.png" width="200">
 </p>
@@ -26,6 +28,18 @@ Implementar un sistema capaç de supervisar:
 - rendiment del sistema
 
 El sistema genera alertes i informes per detectar problemes abans que afectin el servei.
+
+---
+
+# Documentació Zabbix
+
+| Apartat | Document |
+|---|---|
+| Instal·lació i Configuració Bàsica | [Instal·lació i Configuració Bàsica](docs/03_instal_lacio_i_configuracio_basica.md) |
+| Disseny de Polítiques de Monitorització | [Disseny de Polítiques de Monitorització](docs/04_disseny_de_politiques_de_monitoritzacio.md) |
+| Personalització i Desenvolupament de Scripts | [Personalització i Desenvolupament de Scripts](docs/05_personalitzacio_i_desenvolupament_de_scripts.md) |
+| Implementació de Dashboard i Informes | [Implementació de Dashboard i Informes](docs/06_implementacio_de_dashboard_i_informes.md) |
+| Proves i Validació | [Proves i Validació](docs/07_proves_i_validacio.md) |
 
 ---
 
@@ -116,18 +130,6 @@ Amb Zabbix podem monitoritzar:
 Un altre punt important és que Zabbix permet utilitzar plantilles. Això facilita molt la feina, perquè en lloc de crear totes les comprobacions manualment, es poden aplicar plantilles segons el tipus d’equip o servei. Per exemple, es poden usar plantilles para Linux, SNMP, TrueNAS o serveis concrets.
 
 També és important la parte visual. Zabbix permet crear dashboards personalitzats amb gràfiques, mapes, problemes actius i estat dels hosts. Això és útil per documentar el projecte i també per tenir una pantalla de control clara.
-
----
-
-# Documentació Zabbix
-
-| Apartat | Document |
-|---|---|
-| Instal·lació i Configuració Bàsica | [Instal·lació i Configuració Bàsica](docs/03_instal_lacio_i_configuracio_basica.md) |
-| Disseny de Polítiques de Monitorització | [Disseny de Polítiques de Monitorització](docs/04_disseny_de_politiques_de_monitoritzacio.md) |
-| Personalització i Desenvolupament de Scripts | [Personalització i Desenvolupament de Scripts](docs/05_personalitzacio_i_desenvolupament_de_scripts.md) |
-| Implementació de Dashboard i Informes | [Implementació de Dashboard i Informes](docs/06_implementacio_de_dashboard_i_informes.md) |
-| Proves i Validació | [Proves i Validació](docs/07_proves_i_validacio.md) |
 
 ---
 

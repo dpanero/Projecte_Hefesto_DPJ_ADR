@@ -1,5 +1,7 @@
 # Implementació de Dashboard i Informes
 
+[Tornar al inici de Zabbix](/05_Monitorització_de_xarxes_Zabbix/README.md)
+
 En aquest apartat es mostra com hem utilitzat els dashboards de Zabbix per centralitzar la informació més important de la infraestructura Hefesto en una sola vista. L’objectiu no és només veure dades soltes, sinó tenir una pantalla general que permeti entendre ràpidament l’estat dels serveis, detectar problemes i comprovar si els elements principals del projecte funcionen correctament.
 
 El dashboard creat reuneix informació de diferents parts de l’entorn: l’estat general del servidor Zabbix, els problemes actius, els avisos recents, el clúster de Proxmox, l’ús de CPU i RAM dels nodes, l’estat del NAS TrueNAS i també els logs rebuts de Suricata i pfSense. D’aquesta manera podem veure en temps real tant la part de monitorització de sistemes com la part de seguretat i xarxa.
@@ -166,11 +168,54 @@ Resultat:
 
 En aquest apartat hem configurat la part d’informes de Zabbix per poder generar resums periòdics de l’estat de la infraestructura Hefesto. La idea no és només mirar les dades en temps real, sinó poder tenir un informe automàtic que resumeixi l’estat general del sistema durant un període concret.
 
-Per fer-ho, primer hem creat un dashboard principal amb la informació més important del projecte: problemes actius, estat dels hosts, servidor web, NAS, Proxmox i mètriques principals. A partir d’aquest dashboard, Zabbix pot generar un informe en PDF i enviar-lo per correu electrònic de forma programada.
+Per fer-ho, primer hem creat un dashboard principal al apartat anterior amb la informació més important del projecte: problemes actius, estat dels hosts, servidor web, NAS, Proxmox i mètriques principals. A partir d’aquest dashboard, Zabbix pot generar un informe en PDF i enviar-lo per correu electrònic de forma programada.
 
-Per activar aquesta funcionalitat hem instal·lat el component `zabbix-web-service`, necessari per generar els informes. També hem configurat el servidor Zabbix amb els paràmetres `WebServiceURL` i `StartReportWriters`, que permeten que el servidor es comuniqui amb el servei encarregat de generar els reports.
+Per activar aquesta funcionalitat hem instal·lat el component `zabbix-web-service`, necessari per generar els informes. També hem configurat el servidor Zabbix amb els paràmetres `WebServiceURL` i `StartReportWriters`, que permeten que el servidor es comuniqui amb el servei encarregat de generar els reports. També instal·lem el `Google Chrome`
+
+![informes 1](<../imatges/06/informes (1).png>)
+![informes 2](<../imatges/06/informes (2).png>)
+
+Editem l'arxiu `/etc/zabbix/zabbix_server.conf` per permetre els reports.
+
+![informes 3](<../imatges/06/informes (3).png>)
+![informes 4](<../imatges/06/informes (4).png>)
+
+Reiniciem el servei de `zabbix-server` i el `zabbix-web-service`, al finalitzar comprovem l'estatus.
+
+![informes 5](<../imatges/06/informes (5).png>)
+
+S'ha aprofitat una de les 3 comptes de correu que nominalia ens permet al nostre pack hosting+domini per tal de generar un correu profesional per enviar els reports.
+Aquí es pot veure el compte creat al panell de nominalia.
+
+![informes 6](<../imatges/06/informes (6).png>)
+
+Afegeixo el compte de correu al zabbix anant a `Alerts > Media type` i editant la plantilla que ja n'hi habia per Gmail (es indiferent es pot crear una nova només es el nom del "media type").
+S'ha fet servir la configuració oferida per nominalia i em introduit les credencials del compte de correu.
+
+![informes 7](<../imatges/06/informes (7).png>)
+
+Després anem a `Users > Admin > Media` i afegim els comptes aquí els hi volem enviar els correus.
+
+![informes 8](<../imatges/06/informes (8).png>)
 
 També hem configurat la `Frontend URL`, indicant l’adreça completa de la interfície web de Zabbix. Aquest pas és important perquè el servei de reports pugui accedir al dashboard i convertir-lo en informe.
 
+![informes 9](<../imatges/06/informes (9).png>)
+
+Creem els directoris on es fara la creació dels reports.
+
+![informes 11](<../imatges/06/informes (11).png>)
+
 Finalment, hem creat un informe periòdic anomenat `Informe setmanal Hefesto`, configurat per generar-se setmanalment i enviar un resum de l’estat de monitorització. Amb això podem revisar l’evolució general del sistema sense haver d’entrar manualment cada vegada a totes les pantalles de Zabbix.
 
+![informes 10](<../imatges/06/informes (10).png>)
+
+Ara per acabar amb aquest apartat procedirem a clicar en la opció de `Test` per confirmar que efectivament ja rebem els correus amb els reports a les direccions de correu que em indicat.
+
+![informes 12](<../imatges/06/informes (12).png>)
+
+---
+
+## Següent apartat
+
+[Proves i Validació](/05_Monitorització_de_xarxes_Zabbix/docs/07_proves_i_validacio.md)

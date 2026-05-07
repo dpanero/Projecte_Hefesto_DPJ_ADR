@@ -1,5 +1,7 @@
 # Virtualització amb Proxmox
 
+[Tornar al inici de Hefesto](/README.md)
+
 <p align="center">
 <img src="imatges/logo_proxmox.png" width="200">
 </p>

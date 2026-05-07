@@ -28,7 +28,7 @@ La infraestructura està composta per:
 
 ---
 
-# Documentació de la infraestructura
+# Disseny conceptual de la infraestructura
 
 | Document | Descripció |
 |---------|------------|
@@ -36,14 +36,14 @@ La infraestructura està composta per:
 
 ---
 
-# Mini projectes
+# Index de projectes
 
 | Projecte | Descripció |
 |---------|------------|
-| [Docker Orquestradors](01_Docker_Orquestradors_Basic/README.md) | Desplegament de microserveis amb Docker Compose, Swarm i Kubernetes |
-| [IDS / IPS](04_IDS_IPS_Suricata/README.md) | Sistema de detecció i prevenció d'intrusions |
-| [Monitorització de xarxa](05_Monitorització_de_xarxes_Zabbix/README.md) | Monitorització d'infraestructura amb Zabbix |
 | [Virtualització](09_Proxmox/README.md) | Plataforma de virtualització Proxmox |
+| [IDS / IPS](04_IDS_IPS_Suricata/README.md) | Sistema de detecció i prevenció d'intrusions Suricata |
+| [Monitorització de xarxa](05_Monitorització_de_xarxes_Zabbix/README.md) | Monitorització d'infraestructura amb Zabbix |
+| [Docker Orquestradors](01_Docker_Orquestradors_Basic/README.md) | Desplegament de microserveis amb Docker Compose, Swarm i Kubernetes |
 
 ---
 

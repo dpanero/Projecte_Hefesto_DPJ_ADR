@@ -1,5 +1,7 @@
 # Personalització i Desenvolupament de Scripts
 
+[Tornar al inici de Zabbix](/05_Monitorització_de_xarxes_Zabbix/README.md)
+
 En aquesta secció ajustarem la interfície d'usuari de Zabbix per millorar la revisió dels logs i alertes d'una manera més rapida, comoda i visual.
 
 ---
@@ -189,3 +191,8 @@ case "$MODE" in
         ;;
 esac
 ```
+---
+
+## Següent apartat
+
+[Implementació de Dashboard i Informes](/05_Monitorització_de_xarxes_Zabbix/docs/06_implementacio_de_dashboard_i_informes.md)
