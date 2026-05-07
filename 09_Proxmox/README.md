@@ -14,7 +14,7 @@ Aquest projecte consisteix en la creació d'un entorn virtual utilitzant la plat
 
 | Document | Descripció |
 |---------|------------|
-| [Instal·lació](docs/installation.md) | Instal·lació i configuració de Proxmox |
+
 
 ---
 
