@@ -33,9 +33,29 @@ Gràcies a aquest Script podem rebre els logs que hem configurat per enviar desd
 ### Script per monitoritzar el servidor Web de la DMZ
 
 Per ampliar la monitorització més enllà de les plantilles per defecte, he creat un script personalitzat per al servidor web del projecte Hefesto. 
-Aquest script comprova l’estat real d’Apache, el codi HTTP retornat per la web, la configuració del servei, els errors recents, les respostes HTTP 5xx, l’ús del directori `/var/www` i una puntuació general de salut del servidor.
+La idea és que Zabbix no només comprovi si la màquina està encesa o si té CPU/RAM disponible, sinó que també pugui revisar punts concrets del servei web que realment ens interessen, d’aquesta manera podem obtenir informació més específica sobre Apache, l’estat de la web, possibles errors HTTP, processos actius i ús del directori web.
 
 [Clica aquí per veure com s'ha configurat el servidor web amb l'agent de Zabbix](https://github.com/dpanero/Projecte_Hefesto_DPJ_ADR/blob/main/05_Monitoritzaci%C3%B3_de_xarxes_Zabbix/docs/03_instal_lacio_i_configuracio_basica.md#servidor-web)
+
+El funcionament és simple: al servidor web tenim un script que fa comprovacions locals i retorna valors numèrics, després, a Zabbix hem creat ítems personalitzats que llegeixen aquests valors cada cert temps. Si algun valor surt fora del que considerem normal, podem crear triggers perquè Zabbix generi una alerta.
+
+[Clica aquí per veure com s'han creat la plantilla amb els items i triggers](https://github.com/dpanero/Projecte_Hefesto_DPJ_ADR/blob/main/05_Monitoritzaci%C3%B3_de_xarxes_Zabbix/docs/04_disseny_de_politiques_de_monitoritzacio.md#servidor-web)
+
+Les keys personalitzades creades són les següents:
+
+| Key | Comprovació | Resultat |
+|---|---|---|
+| `hefesto.web.apache` | Comprova si el servei Apache està actiu | `1` si està actiu, `0` si està aturat |
+| `hefesto.web.http_code` | Comprova el codi HTTP que retorna la web local | Normalment `200` si la web respon bé |
+| `hefesto.web.configtest` | Valida si la configuració d’Apache és correcta | `1` si és correcta, `0` si hi ha errors |
+| `hefesto.web.errors` | Revisa errors recents al log d’Apache | Nombre d’errors trobats |
+| `hefesto.web.processes` | Compta els processos actius d’Apache | Nombre de processos Apache |
+| `hefesto.web.5xx` | Compta respostes HTTP 5xx recents | Nombre d’errors de servidor |
+| `hefesto.web.disk_www` | Comprova l’ús del disc del directori `/var/www` | Percentatge d’ús |
+| `hefesto.web.score` | Calcula una puntuació general de salut del servidor web a partir de diferents valors que em definit al script | Salut del servidor |
+| `hefesto.web.summary` | Recull diferents valors dels configurats al script | Retorna un resum en format text amb l’estat general del servidor web |
+
+Amb aquesta personalització aconseguim una monitorització més adaptada al projecte. No depenem només de les plantilles genèriques de Zabbix, sinó que afegim comprovacions pròpies pensades per al servidor web d’Hefesto.
 
 Contingut del script:
 
@@ -169,10 +189,6 @@ case "$MODE" in
         ;;
 esac
 ```
-
-
-
-
 
 ---
 
