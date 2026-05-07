@@ -290,4 +290,4 @@ A les següents captures es demostren tots els hosts i els items que em creat a 
 
 ## Següent apartat
 
-[Disseny de Polítiques de Monitorització](docs/04_disseny_de_politiques_de_monitoritzacio.md)
+[Disseny de Polítiques de Monitorització](/05_Monitorització_de_xarxes_Zabbix/docs/04_disseny_de_politiques_de_monitoritzacio.md)

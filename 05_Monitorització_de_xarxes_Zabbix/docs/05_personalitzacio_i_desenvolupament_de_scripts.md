@@ -195,4 +195,4 @@ esac
 
 ## Següent apartat
 
-[Implementació de Dashboard i Informes](docs/06_implementacio_de_dashboard_i_informes.md)
+[Implementació de Dashboard i Informes](/05_Monitorització_de_xarxes_Zabbix/docs/06_implementacio_de_dashboard_i_informes.md)

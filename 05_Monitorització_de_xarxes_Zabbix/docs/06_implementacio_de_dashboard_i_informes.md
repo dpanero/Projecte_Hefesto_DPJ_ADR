@@ -218,4 +218,4 @@ Ara per acabar amb aquest apartat procedirem a clicar en la opció de `Test` per
 
 ## Següent apartat
 
-[Proves i Validació](docs/07_proves_i_validacio.md)
+[Proves i Validació](/05_Monitorització_de_xarxes_Zabbix/docs/07_proves_i_validacio.md)

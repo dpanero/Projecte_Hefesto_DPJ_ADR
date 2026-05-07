@@ -203,4 +203,4 @@ El canvi que nosaltres em fet es la configuració dels logs pfsense que em mostr
 
 ## Següent apartat
 
-[Personalització i Desenvolupament de Scripts](docs/05_personalitzacio_i_desenvolupament_de_scripts.md)
+[Personalització i Desenvolupament de Scripts](/05_Monitorització_de_xarxes_Zabbix/docs/05_personalitzacio_i_desenvolupament_de_scripts.md)
