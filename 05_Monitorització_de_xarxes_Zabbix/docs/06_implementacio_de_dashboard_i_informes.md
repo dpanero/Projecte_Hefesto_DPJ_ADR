@@ -12,7 +12,7 @@ Per tant, aquest apartat compleix la funció de convertir totes les dades recoll
 
 ---
 
-## Dashboards de Zabbix
+## Dashboards per al Servidor Zabbix
 
 Primerament tenim els dashboards predeterminats que ens dona zabbix els cuals mostren totes les alertes que Zabbix esta rebent en aquell moment, em deixat que refresqui el contingut cada minut.
 
@@ -23,7 +23,7 @@ Resultat:
 
 ![dahsboards 12](<../imatges/06/dashboards (12).png>)
 
-
+També tenim un widget que ens retorna l'estat del Zabbix en funció a l'us de CPU d'aquest.
 
 ![dahsboards 2](<../imatges/06/dashboards (2).png>)
 
@@ -31,7 +31,10 @@ Resultat:
 
 ![dahsboards 13](<../imatges/06/dashboards (13).png>)
 
+## Dashboards per al Cluster Proxmox
 
+El primer widget que em creat al dashboard per al proxmox és el més important ja que em configurat de manera que depenent de si el status del node en concret és 1 o 0 ens diura si esta o no Online, fem servir el tipus "Top Host" per poder fer servir una columna per cada node.
+Graciés al keepalive que em configurat abans, caigui el node que caigui sempre n'hi haura un dels 3 que reporti l'estat dels altres 2.
 
 ![dahsboards 3](<../imatges/06/dashboards (3).png>)
 
@@ -39,7 +42,7 @@ Resultat:
 
 ![dahsboards 14](<../imatges/06/dashboards (14).png>)
 
-
+També em generat un parell més de widgets com abans pero referents a altres informacions que ens dona la plantilla de proxmox que em agregat a aquest host, el primer de tot es l'ús de CPU que esta fent servir cada node, aixó ho podem fer gracies a que tenim afegit el cluster per una unica IP i la plantilla ens dona la informació separada per nodes.
 
 ![dahsboards 4](<../imatges/06/dashboards (4).png>)
 
@@ -47,7 +50,7 @@ Resultat:
 
 ![dahsboards 15](<../imatges/06/dashboards (15).png>)
 
-
+El mateix que abans pero per saber la RAM que fa servir cada node.
 
 ![dahsboards 5](<../imatges/06/dashboards (5).png>)
 
@@ -55,7 +58,7 @@ Resultat:
 
 ![dahsboards 16](<../imatges/06/dashboards (16).png>)
 
-
+Ara per poder donar valor a la dada anterior em ficat un altre widget amb el total de RAM que cada node té en total
 
 ![dahsboards 6](<../imatges/06/dashboards (6).png>)
 
@@ -63,7 +66,7 @@ Resultat:
 
 ![dahsboards 17](<../imatges/06/dashboards (17).png>)
 
-
+## Dashboards per al NAS
 
 ![dahsboards 7](<../imatges/06/dashboards (7).png>)
 
