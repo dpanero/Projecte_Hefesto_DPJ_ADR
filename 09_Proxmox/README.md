@@ -14,16 +14,16 @@ Aquest projecte consisteix en la creació d'un entorn virtual utilitzant la plat
 
 | Apartat | Document |
 |---|---|
-| Preparació de l'Entorn Base (VirtualBox) | [03_Preparacio_de_lEntorn_Base_VirtualBox.pdf](./03_Preparacio_de_lEntorn_Base_VirtualBox.pdf) |
-| Instal·lació de Proxmox VE | [04_Installacio_de_Proxmox_VE.pdf](./04_Installacio_de_Proxmox_VE.pdf) |
-| Configuració de Xarxa al Clúster | [05_Configuracio_de_Xarxa_al_Cluster.pdf](./05_Configuracio_de_Xarxa_al_Cluster.pdf) |
-| Implementació d'Emmagatzematge | [06_Implementacio_dEmmagatzematge.pdf](./06_Implementacio_dEmmagatzematge.pdf) |
-| Desplegament de Màquines Virtuals | [07_Desplegament_de_Maquines_Virtuals.pdf](./07_Desplegament_de_Maquines_Virtuals.pdf) |
-| Configuració de Recursos | [08_Configuracio_de_Recursos.pdf](./08_Configuracio_de_Recursos.pdf) |
-| Conclusions del Projecte Proxmox | [09_Conclusions_Projecte_Proxmox.pdf](./09_Conclusions_Projecte_Proxmox.pdf) |
-| Integració i Optimització | [10_Integracio_i_Optimitzacio.pdf](./10_Integracio_i_Optimitzacio.pdf) |
-| Optimització del Rendiment | [11_Optimitzacio_del_Rendiment.pdf](./11_Optimitzacio_del_Rendiment.pdf) |
-| Conclusions del Projecte Proxmox avançat | [12_Conclusions_Projecte_Proxmox_avancat.pdf](./12_Conclusions_Projecte_Proxmox_avancat.pdf) |
+| Preparació de l'Entorn Base (VirtualBox) | [03_Preparacio_de_lEntorn_Base_VirtualBox.pdf](docs/03_Preparacio_de_lEntorn_Base_VirtualBox.pdf) |
+| Instal·lació de Proxmox VE | [04_Installacio_de_Proxmox_VE.pdf](docs/04_Installacio_de_Proxmox_VE.pdf) |
+| Configuració de Xarxa al Clúster | [05_Configuracio_de_Xarxa_al_Cluster.pdf](docs/05_Configuracio_de_Xarxa_al_Cluster.pdf) |
+| Implementació d'Emmagatzematge | [06_Implementacio_dEmmagatzematge.pdf](docs/06_Implementacio_dEmmagatzematge.pdf) |
+| Desplegament de Màquines Virtuals | [07_Desplegament_de_Maquines_Virtuals.pdf](docs/07_Desplegament_de_Maquines_Virtuals.pdf) |
+| Configuració de Recursos | [08_Configuracio_de_Recursos.pdf](docs/08_Configuracio_de_Recursos.pdf) |
+| Conclusions del Projecte Proxmox | [09_Conclusions_Projecte_Proxmox.pdf](docs/09_Conclusions_Projecte_Proxmox.pdf) |
+| Integració i Optimització | [10_Integracio_i_Optimitzacio.pdf](docs/10_Integracio_i_Optimitzacio.pdf) |
+| Optimització del Rendiment | [11_Optimitzacio_del_Rendiment.pdf](docs/11_Optimitzacio_del_Rendiment.pdf) |
+| Conclusions del Projecte Proxmox avançat | [12_Conclusions_Projecte_Proxmox_avancat.pdf](docs/12_Conclusions_Projecte_Proxmox_avancat.pdf) |
 
 ---
 
