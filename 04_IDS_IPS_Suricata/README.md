@@ -6,7 +6,7 @@
 <img src="imatges/logo_suricata.png" width="200">
 </p>
 
-Aquest mini projecte consisteix en la implementació d'un sistema de detecció i prevenció d'intrusions dins del laboratori.
+Aquest mini projecte consisteix en la implementació d'un sistema de detecció i prevenció d'intrusions dins del laboratori Hefesto.
 
 ---
 
