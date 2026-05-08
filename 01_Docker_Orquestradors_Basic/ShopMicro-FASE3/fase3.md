@@ -23,7 +23,7 @@ L'objectiu d'aquesta tasca és identificar i documentar totes les credencials qu
 grep -E "PASSWORD|PASS|SECRET|USER" docker-stack.yml
 ```
 
-![a](capturas/Imatge23.png)
+![a0](capturas/Imatge23.png)
 
 ### Vulnerabilitats identificades
 
@@ -64,8 +64,8 @@ docker secret ls
 docker secret rm db_root_password shopmicro_db_root_password shopmicro_db_user_password
 ```
 
-![a](capturas/Imatge24.png)
-![a](capturas/Imatge26.png)
+![a2](capturas/Imatge24.png)
+![a3](capturas/Imatge26.png)
 
 
 A continuació es creen els 5 secrets nous, un per credencial:
@@ -80,7 +80,7 @@ echo -n 'clausecreta_2asix'  | docker secret create jwt_secret -
 
 > el `-n` de `echo` evita afegir un caràcter `\n` final, problema clàssic que ja vam patir a la Fase 1 amb els fitxers de secrets.
 
-![a](capturas/Imatge28.png)
+![a4](capturas/Imatge28.png)
 
 ### 2.3 Adaptar el codi Python
 
@@ -130,11 +130,11 @@ docker push arodriguez5/shopmicro-notification-service:1.1
 
 > Sortida del `docker build` per a una imatge.
 
-![a](capturas/Imatge35.png)
+![a5](capturas/Imatge35.png)
 
 > Sortida del `docker push` mostrant les 4 imatges pujades a Docker Hub amb el tag `:1.1`.
 
-![a](capturas/Imatge36.png)
+![a6](capturas/Imatge36.png)
 
 ### 2.5 Cas especial: RabbitMQ i la deprecació de `_FILE`
 
@@ -164,7 +164,7 @@ hashed = salt + hashlib.sha256(salt + password.encode('utf-8')).digest()
 print(base64.b64encode(hashed).decode('utf-8'))
 ```
 
-![a](capturas/Imatge39.png)
+![a7](capturas/Imatge39.png)
 
 Tant el `rabbitmq-definitions.json` com el `rabbitmq.conf` s'han pujat com a Docker Secrets:
 
@@ -175,7 +175,7 @@ docker secret create rabbitmq_config ./rabbitmq.conf
 
 > Sortida de `docker secret ls` mostrant els 7 secrets totals (5 originals + `rabbitmq_definitions` + `rabbitmq_config`).
 
-![a](capturas/Imatge43.png)
+![a8](capturas/Imatge43.png)
 
 
 Aquesta solució té tres avantatges:
@@ -195,7 +195,7 @@ Aquesta solució té tres avantatges:
 - El bloc final `secrets:` declara tots els secrets com a `external: true`.
 - El servei `message-queue` ara munta `rabbitmq_config` a `/etc/rabbitmq/rabbitmq.conf` amb la sintaxi extensa `source/target`.
 
-![a](capturas/Imatge46.png)
+![a9](capturas/Imatge46.png)
 
 `external: true` significa que aquests secrets ja existeixen al clúster i Docker no els tornarà a crear ni a sobreescriure. Això **desacobla el cicle de vida dels secrets del cicle de vida del stack**, una bona pràctica de seguretat.
 
@@ -208,7 +208,7 @@ docker volume rm shopmicro_db_products_data shopmicro_db_orders_data shopmicro_c
 docker stack deploy -c docker-stack.yml shopmicro
 ```
 
-![a](capturas/Imatge48.png)
+![a10](capturas/Imatge48.png)
 
 ### 2.8 Verificació funcional
 
@@ -216,7 +216,7 @@ Tota la web segueix funcionant amb els secrets, però ara cap credencial està e
 
 > Captura de la web mostrant el login funcional amb token JWT, la càrrega de productes amb badge de Redis, i la creació de comandes.
 
-![a](capturas/84.png)
+![a11](capturas/84.png)
 
 ---
 
@@ -238,7 +238,7 @@ networks:
 
 > Captura de la secció `networks:` del `docker-stack.yml`.
 
-![a](capturas/54.png)
+![a12](capturas/Imatge54.png)
 
 ### 3.2 Matriu de comunicació
 
@@ -258,7 +258,7 @@ networks:
 docker network ls | grep shopmicro
 ```
 
-![a](capturas/55.png)
+![a](capturas/Imatge55.png)
 
 ### 3.4 Inspecció dels serveis a cada xarxa
 
@@ -273,7 +273,7 @@ done
 
 > Sortida del bucle mostrant els contenidors connectats a cada xarxa.
 
-![a](capturas/56.png)
+![a13](capturas/Imatge56.png)
 
 ### 3.5 Prova pràctica d'aïllament
 
@@ -283,7 +283,7 @@ La prova definitiva consisteix a intentar resoldre noms DNS des de dins d'un con
 
 > Sortida del `docker ps` identificant el contenidor del frontend.
 
-![a](capturas/57.png)
+![a14](capturas/Imatge57.png)
 
 #### Test 1: el frontend POT parlar amb l'api-gateway (mateixa xarxa)
 
@@ -293,13 +293,13 @@ docker exec $FRONTEND_ID getent hosts api-gateway
 
 >  Sortida del `getent hosts api-gateway` retornant una IP.
 
-![a](capturas/58.png)
+![a15](capturas/Imatge58.png)
 
 #### Test 2: el frontend NO POT parlar amb les BDs (diferent xarxa)
 
 > Sortida dels `getent` retornant buit, demostrant l'aïllament.
 
-![a](capturas/59.png)
+![a16](capturas/Imatge59.png)
 
 ### 3.6 Anàlisi dels avantatges
 
@@ -335,7 +335,7 @@ docker info | grep -A 25 "Swarm:"
 
 > Sortida de `docker info | grep -A 25 "Swarm:"` mostrant la secció `CA Configuration: Expiry Duration: 3 months`.
 
-![a](capturas/60.png)
+![a17](capturas/Imatge60.png)
 
 Punts destacables de la sortida:
 
@@ -352,7 +352,7 @@ sudo openssl x509 -in /var/lib/docker/swarm/certificates/swarm-root-ca.crt -text
 
 > Sortida de l'`openssl x509` mostrant el certificat arrel.
 
-![a](capturas/61.png)
+![a18](capturas/Imatge61.png)
 
 #### Punts destacables del certificat arrel
 
@@ -369,7 +369,7 @@ sudo openssl x509 -in /var/lib/docker/swarm/certificates/swarm-node.crt -text -n
 
 > Sortida del certificat del node manager.
 
-![a](capturas/62.png)
+![a19](capturas/Imatge62.png)
 
 #### Punts destacables del certificat del node
 
@@ -415,7 +415,7 @@ docker scout version
 
 > Sortida de `docker scout version` confirmant la instal·lació (v1.20.4).
 
-![a](capturas/65.png)
+![a20](capturas/Imatge65.png)
 
 ### 5.2 Vista ràpida de cada imatge
 
@@ -434,17 +434,17 @@ docker scout quickview arodriguez5/shopmicro-api-gateway:1.0
 
 > Sortida del `quickview` per a les imatges base (mysql, redis, rabbitmq, nginx).
 
-![a](capturas/66.png)
-![a](capturas/67.png)
+![a21](capturas/Imatge66.png)
+![a22](capturas/Imatge67.png)
 
 > Sortida del `quickview` per a les imatges pròpies (product, order, user, notification, frontend, api-gateway).
 
-![a](capturas/68.png)
-![a](capturas/69.png)
-![a](capturas/70.png)
-![a](capturas/71.png)
-![a](capturas/72.png)
-![a](capturas/73.png)
+![a23](capturas/Imatge68.png)
+![a24](capturas/Imatge69.png)
+![a25](capturas/Imatge70.png)
+![a26](capturas/Imatge71.png)
+![a27](capturas/Imatge72.png)
+![a28](capturas/Imatge73.png)
 
 ### 5.3 Anàlisi detallat de cada imatge
 
@@ -464,7 +464,7 @@ docker scout cves arodriguez5/shopmicro-product-service:1.1 > product-service.tx
 
 > Sortida del `ls -la` a `scout-reports/` mostrant tots els fitxers d'informes generats.
 
-![a](capturas/77.png)
+![a29](capturas/Imatge77.png)
 
 ### 5.4 Resum de vulnerabilitats detectades
 
@@ -508,10 +508,10 @@ docker scout cves arodriguez5/shopmicro-product-service:1.1 > product-service.tx
 
 > Sortida de `docker scout cves --only-severity critical,high mysql:8.0` mostrant la CVE-2025-68121 i les altres altes.
 
-![a](capturas/78.png)
-![a](capturas/79.png)
-![a](capturas/80.png)
-![a](capturas/81.png)
+![a30](capturas/Imatge78.png)
+![a31](capturas/Imatge79.png)
+![a32](capturas/Imatge80.png)
+![a33](capturas/Imatge81.png)
 
 #### 🟠 CVE-2024-21272 — SQL Injection (afecta directament l'app)
 
@@ -531,8 +531,8 @@ docker scout cves arodriguez5/shopmicro-product-service:1.1 > product-service.tx
 
 > Sortida de `docker scout cves --only-severity critical,high arodriguez5/shopmicro-product-service:1.1` mostrant la CVE-2024-21272 i les altres altes.
 
-![a](capturas/82.png)
-![a](capturas/83.png)
+![a34](capturas/Imatge82.png)
+![a35](capturas/Imatge83.png)
 
 #### 🟠 CVE-2026-24049 — Path Traversal a Wheel
 
