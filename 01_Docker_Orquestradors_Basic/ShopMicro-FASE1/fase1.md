@@ -1,4 +1,4 @@
-# Fase 1 — Docker Compose: Entorn de Desenvolupament
+# Docker Compose-Entorn de Desenvolupament
 
 > **Objectiu**: posar en marxa tots els serveis de ShopMicro en un entorn local mitjançant Docker Compose, amb xarxes internes, volums persistents i healthchecks.
 
@@ -83,8 +83,6 @@ graph TB
     Notif --> MQ
 ```
 
-> 📸 **CAPTURA 1.1** — Diagrama d'arquitectura exportat a PNG des de draw.io o Mermaid Live.
-
 ### Decisions de disseny
 
 S'han creat **tres xarxes separades** per seguretat i per il·lustrar la separació de responsabilitats:
@@ -132,8 +130,6 @@ shopmicro/
     ├── requirements.txt
     └── app.py
 ```
-
-> 📸 **CAPTURA 1.2** — Captura del `tree` o de l'explorador de VS Code mostrant l'estructura.
 
 ---
 
@@ -209,13 +205,12 @@ Exposa `/products` (GET). Implementa el patró **cache-aside** amb Redis:
 2. Si no hi és, consulta MySQL i guarda el resultat a Redis amb TTL de 60 segons.
 3. Retorna la llista amb un camp `source` que indica si ve de `cache` o `db`.
 
-> 📸 **CAPTURA 1.4** — Captura del fitxer `product-service/app.py`.
-
+- [fitxer `product-service/app.py`](product-service/app.py)
 ### user-service
 
 Exposa `/users/register` (POST), `/users/login` (POST) i `/users` (GET). Implementa autenticació amb tokens **JWT** signats amb una clau secreta. Les contrasenyes es guarden hashejades amb SHA-256.
 
-> 📸 **CAPTURA 1.5** — Captura del fitxer `user-service/app.py`.
+- [fitxer `user-service/app.py`](user-service/app.py)
 
 ### order-service
 
@@ -225,13 +220,13 @@ Exposa `/orders` (GET, POST) i `/orders/<id>` (GET). En crear una comanda:
 2. Crea la comanda a `db-orders`.
 3. Publica un missatge a la cua `orders` de RabbitMQ.
 
-> 📸 **CAPTURA 1.6** — Captura del fitxer `order-service/app.py`.
+- [fitxer `order-service/app.py`](order-service/app.py)
 
 ### notification-service
 
 No exposa API. Es connecta a RabbitMQ i consumeix missatges de la cua `orders` indefinidament. Quan rep un missatge, l'imprimeix al log amb un format llegible.
 
-> 📸 **CAPTURA 1.7** — Captura del fitxer `notification-service/app.py`.
+- [fitxer `notification-service/app.py`](notification-service/app.py)
 
 ---
 
@@ -267,7 +262,7 @@ http {
 4. **Historial de comandes** actualitzable.
 
 > 📸 **CAPTURA 1.8** — Captura de la web a `http://localhost:8080` mostrant tots els apartats funcionant.
-
+![Captura de la web a `http://localhost:8080` mostrant tots els apartats funcionant.](capturas/8.png)
 ---
 
 ## 7. Desplegament i verificació
@@ -285,52 +280,39 @@ docker compose ps
 docker compose logs product-service
 ```
 
-> 📸 **CAPTURA 1.9** — Sortida de `docker compose up -d --build` amb tots els serveis "Built" i "Started".
 
-> 📸 **CAPTURA 1.10** — Sortida de `docker compose ps` amb tots els serveis en estat `Up` o `Healthy`.
+![Sortida de `docker compose up -d --build` amb tots els serveis "Built" i "Started1"](capturas/Imatge1.png)
+![Sortida de `docker compose up -d --build` amb tots els serveis "Built" i "Started2"](capturas/Imatge2.png)
+![Sortida de `docker compose up -d --build` amb tots els serveis "Built" i "Started3"](capturas/Imatge3.png)
+![Sortida de `docker compose up -d --build` amb tots els serveis "Built" i "Started4"](capturas/Imatge4.png)
+
+![Sortida de `docker compose ps` amb tots els serveis en estat `Up` o `Healthy`](capturas/Imatge5.png)
 
 ### Verificació dels fluxos funcionals
 
 #### Flux 1 — Consulta de productes (cache de Redis)
 
-```bash
-curl http://localhost:8080/api/products
-# Primera crida: "source": "db"
-curl http://localhost:8080/api/products
-# Segona crida (en menys de 60s): "source": "cache"
-```
-
 > 📸 **CAPTURA 1.11** — Captura de la web mostrant primer "Origen: db-products (MySQL)" i després "Origen: Redis (cache)".
+
+![Captura de la web mostrant primer "Origen: db-products (MySQL)" i després "Origen: Redis (cache)](capturas/9.png)
+
+![Captura de la web mostrant primer "Origen: db-products (MySQL)" i després "Origen: Redis (cache)](capturas/10.png)
 
 #### Flux 2 — Registre i login d'usuari
 
-```bash
-curl -X POST http://localhost:8080/api/users/register \
-  -H "Content-Type: application/json" \
-  -d '{"username":"axel","password":"1234"}'
-
-curl -X POST http://localhost:8080/api/users/login \
-  -H "Content-Type: application/json" \
-  -d '{"username":"axel","password":"1234"}'
-# Retorna un JWT
-```
-
 > 📸 **CAPTURA 1.12** — Captura de la web mostrant "Login correcte" amb el token JWT.
+
+![Captura de la web mostrant "Login correcte" amb el token JWT](capturas/11.png)
 
 #### Flux 3 — Creació de comanda i notificació via RabbitMQ
 
-```bash
-curl -X POST http://localhost:8080/api/orders \
-  -H "Content-Type: application/json" \
-  -d '{"product_id":1,"quantity":2}'
+> Captura de la web mostrant "Comanda creada".
 
-docker compose logs notification-service
-# [NOTIFICACIÓ] Comanda #1 creada: 2 x Portàtil...
-```
+![Captura de la web mostrant "Comanda creada"](capturas/12.png)
 
-> 📸 **CAPTURA 1.13** — Captura de la web mostrant "Comanda creada".
+> Logs de `notification-service` mostrant el missatge de notificació rebut de RabbitMQ.
 
-> 📸 **CAPTURA 1.14** — Logs de `notification-service` mostrant el missatge de notificació rebut de RabbitMQ.
+![Logs de `notification-service` mostrant el missatge de notificació rebut de RabbitMQ](capturas/13.png)
 
 ---
 
@@ -344,15 +326,6 @@ docker compose logs notification-service
 - Healthchecks que asseguren que els microserveis no arrencen abans que la BD estigui llesta.
 - Tres fluxos funcionals demostrables des de la web.
 
-### Problemes trobats i resolts
-
-Durant el desenvolupament es va detectar que els microserveis Python rebien errors `Access denied` en connectar a MySQL. Després d'investigar, es va veure que els fitxers de secrets generats amb `echo` incloïen un caràcter `\n` final, que s'incloïa a la contrasenya de l'usuari `appuser` que MySQL creava al primer arrencament. Com que MySQL només llegeix les credencials a la primera arrencada (i les guarda al volum), va ser necessari:
-
-1. Regenerar els fitxers amb `printf` (sense `\n`).
-2. Esborrar els volums amb `docker compose down -v` perquè MySQL es tornés a inicialitzar.
-
-Aquesta experiència il·lustra una de les **trampes habituals** quan es treballa amb imatges oficials de bases de dades a Docker.
-
 ### Què s'ha après
 
 - Funcionament del fitxer `docker-compose.yml` i de la sintaxi YAML.
@@ -362,5 +335,3 @@ Aquesta experiència il·lustra una de les **trampes habituals** quan es treball
 - Patró cache-aside amb Redis i missatgeria asíncrona amb RabbitMQ.
 
 ---
-
-*Anar a la [Fase 2 — Docker Swarm](./FASE2.md) ➡️*

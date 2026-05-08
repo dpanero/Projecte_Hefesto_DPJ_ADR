@@ -23,7 +23,7 @@ L'objectiu d'aquesta tasca és identificar i documentar totes les credencials qu
 grep -E "PASSWORD|PASS|SECRET|USER" docker-stack.yml
 ```
 
-> 📸 **CAPTURA 3.1** — Sortida del `grep` mostrant totes les línies amb credencials en clar.
+![a](capturas/Imatge23.png)
 
 ### Vulnerabilitats identificades
 
@@ -64,7 +64,9 @@ docker secret ls
 docker secret rm db_root_password shopmicro_db_root_password shopmicro_db_user_password
 ```
 
-> 📸 **CAPTURA 3.2** — Sortida de `docker secret ls` abans de la neteja, i després mostrant llista buida.
+![a](capturas/Imatge24.png)
+![a](capturas/Imatge26.png)
+
 
 A continuació es creen els 5 secrets nous, un per credencial:
 
@@ -76,9 +78,9 @@ echo -n 'admin123'           | docker secret create mq_password -
 echo -n 'clausecreta_2asix'  | docker secret create jwt_secret -
 ```
 
-> 💡 **Important**: el `-n` de `echo` evita afegir un caràcter `\n` final, problema clàssic que ja vam patir a la Fase 1 amb els fitxers de secrets.
+> el `-n` de `echo` evita afegir un caràcter `\n` final, problema clàssic que ja vam patir a la Fase 1 amb els fitxers de secrets.
 
-> 📸 **CAPTURA 3.3** — Sortida de les 5 comandes `docker secret create` i, després, `docker secret ls` mostrant els 5 secrets creats.
+![a](capturas/Imatge28.png)
 
 ### 2.3 Adaptar el codi Python
 
@@ -97,9 +99,7 @@ def read_secret(name, fallback_env=None):
     raise RuntimeError(f"Secret '{name}' no trobat ni a /run/secrets/ ni com a variable {fallback_env}")
 ```
 
-> 📸 **CAPTURA 3.4** — Captura del codi de la funció `read_secret` al fitxer `app.py` d'un dels microserveis.
-
-El paràmetre `fallback_env` permet que el mateix codi funcioni tant en Swarm (amb secrets) com en Docker Compose (amb variables d'entorn), facilitant el desenvolupament local i la migració entre entorns.
+El paràmetre `fallback_env` permet que el mateix codi funcioni tant en Swarm amb secrets com en Docker Compose amb variables d'entorn, facilitant el desenvolupament local i la migració entre entorns.
 
 ### Resum de variables migrades a secrets per microservei
 
@@ -110,7 +110,7 @@ El paràmetre `fallback_env` permet que el mateix codi funcioni tant en Swarm (a
 | `order-service` | `DB_PASSWORD`, `MQ_USER`, `MQ_PASS` |
 | `notification-service` | `MQ_USER`, `MQ_PASS` |
 
-> 📸 **CAPTURA 3.5** — Captura de les línies `read_secret(...)` als 4 fitxers `app.py`.
+![a](capturas/Imatge29.png)
 
 ### 2.4 Reconstruir i pujar les imatges
 
@@ -128,9 +128,13 @@ docker push arodriguez5/shopmicro-user-service:1.1
 docker push arodriguez5/shopmicro-notification-service:1.1
 ```
 
-> 📸 **CAPTURA 3.6** — Sortida del `docker build` per a una imatge.
+> Sortida del `docker build` per a una imatge.
 
-> 📸 **CAPTURA 3.7** — Sortida del `docker push` mostrant les 4 imatges pujades a Docker Hub amb el tag `:1.1`.
+![a](capturas/Imatge35.png)
+
+> Sortida del `docker push` mostrant les 4 imatges pujades a Docker Hub amb el tag `:1.1`.
+
+![a](capturas/Imatge36.png)
 
 ### 2.5 Cas especial: RabbitMQ i la deprecació de `_FILE`
 
@@ -142,30 +146,13 @@ error: RABBITMQ_DEFAULT_USER_FILE is set but deprecated
 Please use a configuration file instead
 ```
 
-> 📸 **CAPTURA 3.8** — Logs del contenidor de RabbitMQ amb els missatges d'error de deprecació.
-
 #### Solució aplicada: fitxer de definicions JSON
 
 Seguint la documentació oficial de RabbitMQ, s'ha migrat a l'enfocament basat en un **fitxer de definicions JSON** que conté usuaris, permisos i virtual hosts. Aquest fitxer es carrega a l'arrencada mitjançant la directiva `load_definitions` del `rabbitmq.conf`.
 
-El fitxer JSON conté el hash SHA-256 de la contrasenya (RabbitMQ no permet emmagatzemar contrasenyes en clar):
+El fitxer JSON conté el hash SHA-256 de la contrasenya:
 
-```json
-{
-  "rabbit_version": "3.13.0",
-  "users": [{
-    "name": "admin",
-    "password_hash": "Rl+QdrxlCXCho4h2TgizyKTmUbcSWslY0BHK5L1lykIkh3sb",
-    "hashing_algorithm": "rabbit_password_hashing_sha256",
-    "tags": ["administrator"]
-  }],
-  "vhosts": [{"name": "/"}],
-  "permissions": [{
-    "user": "admin", "vhost": "/",
-    "configure": ".*", "write": ".*", "read": ".*"
-  }]
-}
-```
+- [`fitxer rabbitmq-definitions.json`](./rabbitmq-definitions.json)
 
 El hash s'ha generat amb un script Python:
 
@@ -177,9 +164,7 @@ hashed = salt + hashlib.sha256(salt + password.encode('utf-8')).digest()
 print(base64.b64encode(hashed).decode('utf-8'))
 ```
 
-> 📸 **CAPTURA 3.9** — Sortida del script Python generant el hash.
-
-> 📸 **CAPTURA 3.10** — Captura del fitxer `rabbitmq-definitions.json` complet amb el hash incrustat.
+![a](capturas/Imatge39.png)
 
 Tant el `rabbitmq-definitions.json` com el `rabbitmq.conf` s'han pujat com a Docker Secrets:
 
@@ -188,7 +173,10 @@ docker secret create rabbitmq_definitions ./rabbitmq-definitions.json
 docker secret create rabbitmq_config ./rabbitmq.conf
 ```
 
-> 📸 **CAPTURA 3.11** — Sortida de `docker secret ls` mostrant els 7 secrets totals (5 originals + `rabbitmq_definitions` + `rabbitmq_config`).
+> Sortida de `docker secret ls` mostrant els 7 secrets totals (5 originals + `rabbitmq_definitions` + `rabbitmq_config`).
+
+![a](capturas/Imatge43.png)
+
 
 Aquesta solució té tres avantatges:
 
@@ -198,7 +186,7 @@ Aquesta solució té tres avantatges:
 
 ### 2.6 Nou docker-stack.yml amb secrets
 
-> 📸 **CAPTURA 3.12** — Captura del fitxer `docker-stack.yml` complet amb els canvis (en diverses parts si cal).
+- [`fitxer docker-stack.yml`](./docker-stack.yml)
 
 #### Canvis principals respecte a la Fase 2
 
@@ -207,18 +195,9 @@ Aquesta solució té tres avantatges:
 - El bloc final `secrets:` declara tots els secrets com a `external: true`.
 - El servei `message-queue` ara munta `rabbitmq_config` a `/etc/rabbitmq/rabbitmq.conf` amb la sintaxi extensa `source/target`.
 
-```yaml
-secrets:
-  db_root_password:    { external: true }
-  db_user_password:    { external: true }
-  mq_user:             { external: true }
-  mq_password:         { external: true }
-  jwt_secret:          { external: true }
-  rabbitmq_config:     { external: true }
-  rabbitmq_definitions: { external: true }
-```
+![a](capturas/Imatge46.png)
 
-`external: true` significa que aquests secrets ja existeixen al clúster (creats manualment) i Docker no els tornarà a crear ni a sobreescriure. Això **desacobla el cicle de vida dels secrets del cicle de vida del stack**, una bona pràctica de seguretat.
+`external: true` significa que aquests secrets ja existeixen al clúster i Docker no els tornarà a crear ni a sobreescriure. Això **desacobla el cicle de vida dels secrets del cicle de vida del stack**, una bona pràctica de seguretat.
 
 ### 2.7 Redesplegament i verificació
 
@@ -229,19 +208,15 @@ docker volume rm shopmicro_db_products_data shopmicro_db_orders_data shopmicro_c
 docker stack deploy -c docker-stack.yml shopmicro
 ```
 
-> 📸 **CAPTURA 3.13** — Sortida del `docker stack deploy` mostrant la creació dels serveis amb les noves imatges `:1.1`.
-
-> 📸 **CAPTURA 3.14** — Sortida de `docker stack services shopmicro` mostrant tots els serveis amb rèpliques `X/X`, incloent `message-queue 1/1`.
-
-> 📸 **CAPTURA 3.15** — Logs de RabbitMQ mostrant el missatge `Importing concurrently 1 users... Started RabbitMQ broker` confirmant que ha carregat les definicions del JSON.
+![a](capturas/Imatge48.png)
 
 ### 2.8 Verificació funcional
 
 Tota la web segueix funcionant amb els secrets, però ara cap credencial està en clar enlloc.
 
-> 📸 **CAPTURA 3.16** — Captura de la web mostrant el login funcional amb token JWT, la càrrega de productes amb badge de Redis, i la creació de comandes.
+> Captura de la web mostrant el login funcional amb token JWT, la càrrega de productes amb badge de Redis, i la creació de comandes.
 
-> 📸 **CAPTURA 3.17** — Logs de `notification-service` mostrant els missatges de notificació rebuts (`[NOTIFICACIÓ] Comanda #X creada...`), demostrant que el flux 2 funciona en mode segur.
+![a](capturas/84.png)
 
 ---
 
@@ -261,7 +236,9 @@ networks:
   mq-net:          { driver: overlay }   # order/notification-service ↔ rabbitmq
 ```
 
-> 📸 **CAPTURA 3.18** — Captura de la secció `networks:` del `docker-stack.yml`.
+> Captura de la secció `networks:` del `docker-stack.yml`.
+
+![a](capturas/54.png)
 
 ### 3.2 Matriu de comunicació
 
@@ -281,7 +258,7 @@ networks:
 docker network ls | grep shopmicro
 ```
 
-> 📸 **CAPTURA 3.19** — Sortida del `docker network ls` mostrant les 6 xarxes overlay del stack.
+![a](capturas/55.png)
 
 ### 3.4 Inspecció dels serveis a cada xarxa
 
@@ -294,7 +271,9 @@ for net in frontend-net backend-net products-net orders-net cache-net mq-net; do
 done
 ```
 
-> 📸 **CAPTURA 3.20** — Sortida del bucle mostrant els contenidors connectats a cada xarxa.
+> Sortida del bucle mostrant els contenidors connectats a cada xarxa.
+
+![a](capturas/56.png)
 
 ### 3.5 Prova pràctica d'aïllament
 
@@ -302,13 +281,9 @@ La prova definitiva consisteix a intentar resoldre noms DNS des de dins d'un con
 
 #### Setup: identificar un contenidor del frontend
 
-```bash
-# Al worker on s'executi el frontend:
-docker ps --filter "name=shopmicro_frontend"
-FRONTEND_ID=f448b1d1e401
-```
+> Sortida del `docker ps` identificant el contenidor del frontend.
 
-> 📸 **CAPTURA 3.21** — Sortida del `docker ps` identificant el contenidor del frontend.
+![a](capturas/57.png)
 
 #### Test 1: el frontend POT parlar amb l'api-gateway (mateixa xarxa)
 
@@ -316,23 +291,15 @@ FRONTEND_ID=f448b1d1e401
 docker exec $FRONTEND_ID getent hosts api-gateway
 ```
 
-Resultat esperat: una IP, exemple `10.0.6.2`.
+>  Sortida del `getent hosts api-gateway` retornant una IP.
 
-> 📸 **CAPTURA 3.22** — Sortida del `getent hosts api-gateway` retornant una IP.
+![a](capturas/58.png)
 
 #### Test 2: el frontend NO POT parlar amb les BDs (diferent xarxa)
 
-```bash
-docker exec $FRONTEND_ID getent hosts db-products
-docker exec $FRONTEND_ID getent hosts db-orders
-docker exec $FRONTEND_ID getent hosts product-service
-docker exec $FRONTEND_ID getent hosts user-service
-docker exec $FRONTEND_ID getent hosts cache
-```
+> Sortida dels `getent` retornant buit, demostrant l'aïllament.
 
-Resultat esperat: cap sortida (silenci) i exit code != 0.
-
-> 📸 **CAPTURA 3.23** — Sortida dels `getent` retornant buit, demostrant l'aïllament. **Aquesta és la captura clau de la Tasca 3.**
+![a](capturas/59.png)
 
 ### 3.6 Anàlisi dels avantatges
 
@@ -366,7 +333,9 @@ Això és el que fa que **Swarm sigui segur per defecte**, sense que l'administr
 docker info | grep -A 25 "Swarm:"
 ```
 
-> 📸 **CAPTURA 3.24** — Sortida de `docker info | grep -A 25 "Swarm:"` mostrant la secció `CA Configuration: Expiry Duration: 3 months`.
+> Sortida de `docker info | grep -A 25 "Swarm:"` mostrant la secció `CA Configuration: Expiry Duration: 3 months`.
+
+![a](capturas/60.png)
 
 Punts destacables de la sortida:
 
@@ -381,7 +350,9 @@ Punts destacables de la sortida:
 sudo openssl x509 -in /var/lib/docker/swarm/certificates/swarm-root-ca.crt -text -noout | head -25
 ```
 
-> 📸 **CAPTURA 3.25** — Sortida de l'`openssl x509` mostrant el certificat arrel.
+> Sortida de l'`openssl x509` mostrant el certificat arrel.
+
+![a](capturas/61.png)
 
 #### Punts destacables del certificat arrel
 
@@ -396,7 +367,9 @@ sudo openssl x509 -in /var/lib/docker/swarm/certificates/swarm-root-ca.crt -text
 sudo openssl x509 -in /var/lib/docker/swarm/certificates/swarm-node.crt -text -noout | head -30
 ```
 
-> 📸 **CAPTURA 3.26** — Sortida del certificat del node manager.
+> Sortida del certificat del node manager.
+
+![a](capturas/62.png)
 
 #### Punts destacables del certificat del node
 
@@ -440,7 +413,9 @@ sh install-scout.sh
 docker scout version
 ```
 
-> 📸 **CAPTURA 3.27** — Sortida de `docker scout version` confirmant la instal·lació (v1.20.4).
+> Sortida de `docker scout version` confirmant la instal·lació (v1.20.4).
+
+![a](capturas/65.png)
 
 ### 5.2 Vista ràpida de cada imatge
 
@@ -457,9 +432,19 @@ docker scout quickview arodriguez5/shopmicro-frontend:1.0
 docker scout quickview arodriguez5/shopmicro-api-gateway:1.0
 ```
 
-> 📸 **CAPTURA 3.28** — Sortida del `quickview` per a les imatges base (mysql, redis, rabbitmq, nginx).
+> Sortida del `quickview` per a les imatges base (mysql, redis, rabbitmq, nginx).
 
-> 📸 **CAPTURA 3.29** — Sortida del `quickview` per a les imatges pròpies (product, order, user, notification, frontend, api-gateway).
+![a](capturas/66.png)
+![a](capturas/67.png)
+
+> Sortida del `quickview` per a les imatges pròpies (product, order, user, notification, frontend, api-gateway).
+
+![a](capturas/68.png)
+![a](capturas/69.png)
+![a](capturas/70.png)
+![a](capturas/71.png)
+![a](capturas/72.png)
+![a](capturas/73.png)
 
 ### 5.3 Anàlisi detallat de cada imatge
 
@@ -477,7 +462,9 @@ docker scout cves arodriguez5/shopmicro-product-service:1.1 > product-service.tx
 # ... resta d'imatges
 ```
 
-> 📸 **CAPTURA 3.30** — Sortida del `ls -la` a `scout-reports/` mostrant tots els fitxers d'informes generats.
+> Sortida del `ls -la` a `scout-reports/` mostrant tots els fitxers d'informes generats.
+
+![a](capturas/77.png)
 
 ### 5.4 Resum de vulnerabilitats detectades
 
@@ -519,7 +506,12 @@ docker scout cves arodriguez5/shopmicro-product-service:1.1 > product-service.tx
 
 **Mitigació en el meu cas**: **Risc real BAIX**. La vulnerabilitat afecta el procés d'arrencada del contenidor, no el motor de MySQL en si. Els meus contenidors de BD no estan exposats a Internet (només a les xarxes overlay `products-net` i `orders-net`), només arrenquen un cop, i estan al manager amb accés restringit per SSH.
 
-> 📸 **CAPTURA 3.31** — Sortida de `docker scout cves --only-severity critical,high mysql:8.0` mostrant la CVE-2025-68121 i les altres altes.
+> Sortida de `docker scout cves --only-severity critical,high mysql:8.0` mostrant la CVE-2025-68121 i les altres altes.
+
+![a](capturas/78.png)
+![a](capturas/79.png)
+![a](capturas/80.png)
+![a](capturas/81.png)
 
 #### 🟠 CVE-2024-21272 — SQL Injection (afecta directament l'app)
 
@@ -537,7 +529,10 @@ docker scout cves arodriguez5/shopmicro-product-service:1.1 > product-service.tx
 
 **Mitigació immediata recomanada**: actualitzar `requirements.txt` dels microserveis a `mysql-connector-python==9.1.0` i tornar a construir les imatges com a `:1.2`.
 
-> 📸 **CAPTURA 3.32** — Sortida de `docker scout cves --only-severity critical,high arodriguez5/shopmicro-product-service:1.1` mostrant la CVE-2024-21272 i les altres altes.
+> Sortida de `docker scout cves --only-severity critical,high arodriguez5/shopmicro-product-service:1.1` mostrant la CVE-2024-21272 i les altres altes.
+
+![a](capturas/82.png)
+![a](capturas/83.png)
 
 #### 🟠 CVE-2026-24049 — Path Traversal a Wheel
 
@@ -603,5 +598,3 @@ L'objectiu d'aquesta arquitectura és garantir que cap vulnerabilitat individual
 - **CVEs no resoltes**: tot i identificades, no s'han eliminat totes per limitacions de temps. Caldria un cicle d'actualització mensual de les imatges.
 
 ---
-
-*⬅️ Tornar a la [Fase 2](./FASE2.md) | Anar a la [Fase 4 — Kubernetes](./FASE4.md) ➡️*

@@ -1,4 +1,4 @@
-# FASE 4 — Kubernetes: Migració i Gestió Avançada
+# Kubernetes: Migració i Gestió Avançada
 
 ## Introducció
 
@@ -33,9 +33,9 @@ ShopMicro-FASE4/
 
 ---
 
-## Tasca 18: Taula comparativa Swarm vs Kubernetes
+## Taula comparativa Swarm vs Kubernetes
 
-# Comparativa Docker Swarm vs Kubernetes — ShopMicro
+# Comparativa Docker Swarm vs Kubernetes
  
 A partir de l'experiència adquirida amb les Fases 2 i 3 (Docker Swarm) i el coneixement teòric de Kubernetes, s'ha preparat la següent comparativa centrada específicament en els aspectes rellevants per al cas d'ús ShopMicro.
  
@@ -165,9 +165,9 @@ La decisió de migrar de Swarm a Kubernetes està justificada quan l'equip és p
 
 ---
 
-## Tasca 19: Instal·lar Minikube i kubectl a WSL
+## Instal·lar Minikube i kubectl a WSL
 
-### Pas 1 — Verificar prerequisits
+### Verificar prerequisits
 
 Abans d'instal·lar res, verifiquem que Docker funciona correctament a WSL:
 
@@ -178,7 +178,7 @@ docker ps
 
 ![Verificació de Docker](capturas/Imatge1.png)
 
-### Pas 2 — Instal·lar kubectl
+### Instal·lar kubectl
 
 `kubectl` és la CLI oficial per interactuar amb qualsevol clúster Kubernetes. Cal instal·lar-la separadament de Minikube:
 
@@ -197,7 +197,7 @@ kubectl version --client
 ![kubectl instal·lat1](capturas/Imatge3.png)
 ![kubectl instal·lat2](capturas/Imatge4.png)
 ![kubectl instal·lat3](capturas/Imatge5.png)
-### Pas 3 — Instal·lar Minikube
+### Instal·lar Minikube
 
 ```bash
 # Descarregar Minikube
@@ -216,7 +216,7 @@ minikube version
 ![Minikube instal·lat3](capturas/Imatge8.png)
 ![Minikube instal·lat4](capturas/Imatge9.png)
 
-### Pas 4 — Arrencar el clúster
+### Arrencar el clúster
 
 Arrenquem Minikube amb el driver Docker, que és l'opció òptima per a WSL ja que aprofita el Docker que ja tenim instal·lat:
 
@@ -237,7 +237,7 @@ Cada paràmetre té el seu propòsit:
 
 ![minikube start](capturas/Imatge10.png)
 
-### Pas 5 — Verificar el clúster
+### Verificar el clúster
 
 ```bash
 # Estat global
@@ -254,7 +254,7 @@ kubectl get pods -n kube-system
 ![minikube status i nodes2](capturas/Imatge12.png)
 ![minikube status i nodes3](capturas/Imatge13.png)
 
-### Pas 6 — Activar el dashboard
+### Activar el dashboard
 
 ```bash
 minikube addons enable dashboard
@@ -275,7 +275,7 @@ minikube dashboard
 ![Dashboard de Minikube2](capturas/Imatge17.png)
 ---
 
-## Tasca 21 — Crear el namespace shopmicro
+## Crear el namespace shopmicro
 
 Un **namespace** a Kubernetes és una carpeta lògica per agrupar i aïllar recursos. Tot el que es crea per a ShopMicro (Deployments, Services, Secrets, ConfigMaps) viurà dins del namespace `shopmicro`, separat del sistema de Kubernetes (`kube-system`) i d'altres projectes.
 
@@ -301,9 +301,9 @@ kubectl describe namespace shopmicro
 
 ---
 
-## Tasca 20 — Crear els manifests YAML
+## Crear els manifests YAML
 
-### Part A — Preparar el `docker-compose-k8s.yml` per a kompose
+### A-Preparar el `docker-compose-k8s.yml` per a kompose
 
 L'eina **kompose** converteix un fitxer `docker-compose.yml` en manifests de Kubernetes automàticament. El problema és que el `docker-stack.yml` de la Fase 3 fa servir sintaxi pròpia de Docker Swarm (`secrets: external: true`, `deploy:`, `depends_on: condition: service_healthy`...) que kompose no sap traduir.
 
@@ -320,7 +320,7 @@ Els canvis respecte al `docker-compose.yml` original:
 | `container_name:` | Kubernetes no el fa servir |
 | `MYSQL_ROOT_PASSWORD_FILE` → `MYSQL_ROOT_PASSWORD` | Kompose generarà variables d'entorn simples |
 
-### Part B — Instal·lar kompose i convertir
+### B-Instal·lar kompose i convertir
 
 ```bash
 # Descarregar kompose
@@ -353,7 +353,7 @@ kompose convert -f docker-compose-k8s.yml --out k8s/generated/
 
 Kompose ha generat la base dels Deployments i els PersistentVolumeClaims. A continuació s'han ajustat manualment per afegir tot el que kompose no pot traduir (probes, secrets, configmaps, init containers).
 
-### Part C — Secrets
+### C-Secrets
 
 Els **Secrets** de Kubernetes són l'equivalent als Docker Secrets de la Fase 3. Emmagatzemen dades sensibles que Kubernetes codifica automàticament en Base64 i que els pods llegeixen com a variables d'entorn sense que apareguin mai en clar als Deployments.
 
@@ -361,15 +361,15 @@ Els **Secrets** de Kubernetes són l'equivalent als Docker Secrets de la Fase 3.
 
 Els 3 fitxers de secrets:
 
-- 📄 [`k8s/secrets/db-secrets.yaml`](k8s/secrets/db-secrets.yaml) — credencials de MySQL (root i appuser).
-- 📄 [`k8s/secrets/jwt-secret.yaml`](k8s/secrets/jwt-secret.yaml) — clau per signar tokens JWT.
-- 📄 [`k8s/secrets/rabbitmq-secrets.yaml`](k8s/secrets/rabbitmq-secrets.yaml) — credencials de RabbitMQ.
+- [`k8s/secrets/db-secrets.yaml`](k8s/secrets/db-secrets.yaml) — credencials de MySQL (root i appuser).
+- [`k8s/secrets/jwt-secret.yaml`](k8s/secrets/jwt-secret.yaml) — clau per signar tokens JWT.
+- [`k8s/secrets/rabbitmq-secrets.yaml`](k8s/secrets/rabbitmq-secrets.yaml) — credencials de RabbitMQ.
 
-### Part D — ConfigMap
+### D-ConfigMap
 
 El **ConfigMap** centralitza tota la configuració no sensible: noms de hosts, noms de bases de dades i usuaris. Separar-ho dels Secrets permet canviar configuració sense tocar les credencials i viceversa.
 
-📄 [`k8s/configmaps/app-config.yaml`](k8s/configmaps/app-config.yaml)
+ [`k8s/configmaps/app-config.yaml`](k8s/configmaps/app-config.yaml)
 
 ### Part E — PersistentVolumeClaims
 
@@ -377,12 +377,12 @@ Els PVCs són l'equivalent als `volumes:` de Docker Compose. Reserven espai d'em
 
 S'han creat 4 PVCs de 100MB cadascun (suficient per a l'entorn de desenvolupament de Minikube):
 
-- 📄 [`k8s/generated/db-products-data-persistentvolumeclaim.yaml`](k8s/generated/db-products-data-persistentvolumeclaim.yaml)
-- 📄 [`k8s/generated/db-orders-data-persistentvolumeclaim.yaml`](k8s/generated/db-orders-data-persistentvolumeclaim.yaml)
-- 📄 [`k8s/generated/cache-data-persistentvolumeclaim.yaml`](k8s/generated/cache-data-persistentvolumeclaim.yaml)
-- 📄 [`k8s/generated/mq-data-persistentvolumeclaim.yaml`](k8s/generated/mq-data-persistentvolumeclaim.yaml)
+- [`k8s/generated/db-products-data-persistentvolumeclaim.yaml`](k8s/generated/db-products-data-persistentvolumeclaim.yaml)
+- [`k8s/generated/db-orders-data-persistentvolumeclaim.yaml`](k8s/generated/db-orders-data-persistentvolumeclaim.yaml)
+- [`k8s/generated/cache-data-persistentvolumeclaim.yaml`](k8s/generated/cache-data-persistentvolumeclaim.yaml)
+- [`k8s/generated/mq-data-persistentvolumeclaim.yaml`](k8s/generated/mq-data-persistentvolumeclaim.yaml)
 
-### Part F — Deployments
+### F-Deployments
 
 Cada microservei té el seu Deployment a la carpeta `k8s/generated/`. Els ajustos manuals més importants respecte als fitxers generats per kompose han estat:
 
@@ -468,24 +468,24 @@ strategy:
 
 **Bases de dades i infraestructura:**
 
-- 📄 [`k8s/generated/db-products-deployment.yaml`](k8s/generated/db-products-deployment.yaml) — MySQL per a productes.
-- 📄 [`k8s/generated/db-orders-deployment.yaml`](k8s/generated/db-orders-deployment.yaml) — MySQL per a comandes i usuaris.
-- 📄 [`k8s/generated/cache-deployment.yaml`](k8s/generated/cache-deployment.yaml) — Redis amb probes via `redis-cli ping`.
-- 📄 [`k8s/generated/message-queue-deployment.yaml`](k8s/generated/message-queue-deployment.yaml) — RabbitMQ amb credencials des de Secrets.
+- [`k8s/generated/db-products-deployment.yaml`](k8s/generated/db-products-deployment.yaml) — MySQL per a productes.
+- [`k8s/generated/db-orders-deployment.yaml`](k8s/generated/db-orders-deployment.yaml) — MySQL per a comandes i usuaris.
+- [`k8s/generated/cache-deployment.yaml`](k8s/generated/cache-deployment.yaml) — Redis amb probes via `redis-cli ping`.
+- [`k8s/generated/message-queue-deployment.yaml`](k8s/generated/message-queue-deployment.yaml) — RabbitMQ amb credencials des de Secrets.
 
 **Microserveis Python:**
 
-- 📄 [`k8s/generated/product-service-deployment.yaml`](k8s/generated/product-service-deployment.yaml) — 2 rèpliques, RollingUpdate, probes HTTP a `/health`.
-- 📄 [`k8s/generated/order-service-deployment.yaml`](k8s/generated/order-service-deployment.yaml) — 2 rèpliques, accés a 2 BDs i RabbitMQ.
-- 📄 [`k8s/generated/user-service-deployment.yaml`](k8s/generated/user-service-deployment.yaml) — 2 rèpliques, JWT secret injectat.
-- 📄 [`k8s/generated/notification-service-deployment.yaml`](k8s/generated/notification-service-deployment.yaml) — 1 rèplica (consumidor pur), sense probes HTTP perquè no exposa API.
+- [`k8s/generated/product-service-deployment.yaml`](k8s/generated/product-service-deployment.yaml) — 2 rèpliques, RollingUpdate, probes HTTP a `/health`.
+- [`k8s/generated/order-service-deployment.yaml`](k8s/generated/order-service-deployment.yaml) — 2 rèpliques, accés a 2 BDs i RabbitMQ.
+- [`k8s/generated/user-service-deployment.yaml`](k8s/generated/user-service-deployment.yaml) — 2 rèpliques, JWT secret injectat.
+- [`k8s/generated/notification-service-deployment.yaml`](k8s/generated/notification-service-deployment.yaml) — 1 rèplica (consumidor pur), sense probes HTTP perquè no exposa API.
 
 **Gateway i frontend:**
 
-- 📄 [`k8s/generated/api-gateway-deployment.yaml`](k8s/generated/api-gateway-deployment.yaml) — 2 rèpliques, init container que espera els microserveis, probes TCP al port 80.
-- 📄 [`k8s/generated/frontend-deployment.yaml`](k8s/generated/frontend-deployment.yaml) — 2 rèpliques, init container que espera l'`api-gateway`, probes HTTP al port 80.
+- [`k8s/generated/api-gateway-deployment.yaml`](k8s/generated/api-gateway-deployment.yaml) — 2 rèpliques, init container que espera els microserveis, probes TCP al port 80.
+- [`k8s/generated/frontend-deployment.yaml`](k8s/generated/frontend-deployment.yaml) — 2 rèpliques, init container que espera l'`api-gateway`, probes HTTP al port 80.
 
-### Part G — Services
+### G-Services
 
 Un **Service** de Kubernetes és un punt d'entrada estable per a un grup de pods. Com que els pods tenen IPs que canvien cada vegada que moren i es recreen, el Service proporciona un nom DNS fix i una IP virtual que sempre apunta als pods correctes.
 
@@ -493,26 +493,26 @@ Tots els Services interns són de tipus **ClusterIP** (per defecte), accessible 
 
 **Services interns (ClusterIP):**
 
-- 📄 [`k8s/services/api-gateway-service.yaml`](k8s/services/api-gateway-service.yaml) — port 80.
-- 📄 [`k8s/services/product-service-service.yaml`](k8s/services/product-service-service.yaml) — port 5000.
-- 📄 [`k8s/services/order-service-service.yaml`](k8s/services/order-service-service.yaml) — port 5000.
-- 📄 [`k8s/services/user-service-service.yaml`](k8s/services/user-service-service.yaml) — port 5000.
-- 📄 [`k8s/services/cache-service.yaml`](k8s/services/cache-service.yaml) — port 6379 (Redis).
-- 📄 [`k8s/services/db-products-service.yaml`](k8s/services/db-products-service.yaml) — port 3306 (MySQL).
-- 📄 [`k8s/services/db-orders-service.yaml`](k8s/services/db-orders-service.yaml) — port 3306 (MySQL).
-- 📄 [`k8s/services/message-queue-service.yaml`](k8s/services/message-queue-service.yaml) — ports 5672 (AMQP) i 15672 (UI de gestió).
+- [`k8s/services/api-gateway-service.yaml`](k8s/services/api-gateway-service.yaml) — port 80.
+- [`k8s/services/product-service-service.yaml`](k8s/services/product-service-service.yaml) — port 5000.
+- [`k8s/services/order-service-service.yaml`](k8s/services/order-service-service.yaml) — port 5000.
+- [`k8s/services/user-service-service.yaml`](k8s/services/user-service-service.yaml) — port 5000.
+- [`k8s/services/cache-service.yaml`](k8s/services/cache-service.yaml) — port 6379 (Redis).
+- [`k8s/services/db-products-service.yaml`](k8s/services/db-products-service.yaml) — port 3306 (MySQL).
+- [`k8s/services/db-orders-service.yaml`](k8s/services/db-orders-service.yaml) — port 3306 (MySQL).
+- [`k8s/services/message-queue-service.yaml`](k8s/services/message-queue-service.yaml) — ports 5672 (AMQP) i 15672 (UI de gestió).
 
 **Service extern (LoadBalancer):**
 
-- 📄 [`k8s/services/frontend-service.yaml`](k8s/services/frontend-service.yaml) — port 8080 (extern) → 80 (intern).
+- [`k8s/services/frontend-service.yaml`](k8s/services/frontend-service.yaml) — port 8080 (extern) → 80 (intern).
 
 El tipus `LoadBalancer` és l'equivalent al `ports: "8080:80"` de Docker Compose. A Minikube requereix executar `minikube tunnel` perquè assigni una IP externa al Service (en un cloud real com AWS o GCP, un LoadBalancer extern s'assignaria automàticament).
 
 ---
 
-## Tasca 22: kubectl apply — Verificar pods Running — minikube tunnel
+## kubectl apply — Verificar pods Running — minikube tunnel
 
-### Pas 1 — Aplicar tots els manifests
+### Aplicar tots els manifests
 
 L'ordre d'aplicació és important: el namespace ha d'existir abans que qualsevol altre recurs, i els Secrets i ConfigMaps han d'existir abans que els Deployments els necessitin.
 
@@ -534,7 +534,7 @@ kubectl apply -f k8s/services/
 ![kubectl apply tots els recursos](capturas/Imatge27.png)
 ![kubectl apply tots els recursos](capturas/Imatge28.png)
 
-### Pas 2 — Verificar que tots els pods estan Running
+### Verificar que tots els pods estan Running
 
 ```bash
 # Veure tots els pods del namespace
@@ -545,7 +545,7 @@ Cal esperar entre 1 i 3 minuts fins que tots els pods estiguin `1/1 Running`. Le
 
 ![Pods Running](capturas/Imatge49.png)
 
-### Pas 3 — Verificar tots els Services
+### Verificar tots els Services
 
 ```bash
 kubectl get services -n shopmicro
@@ -553,7 +553,7 @@ kubectl get services -n shopmicro
 
 ![Services del namespace](capturas/Imatge29.png)
 
-### Pas 4 — Detalls del product-service
+### Detalls del product-service
 
 ```bash
 kubectl describe deployment product-service -n shopmicro
@@ -561,7 +561,7 @@ kubectl describe deployment product-service -n shopmicro
 
 ![Describe product-service](capturas/Imatge30.png)
 
-### Pas 5 — Vista global de tots els recursos
+### Vista global de tots els recursos
 
 ```bash
 kubectl get all -n shopmicro
@@ -569,7 +569,7 @@ kubectl get all -n shopmicro
 
 ![Vista global de tots els recursos](capturas/Imatge31.png)
 
-### Pas 6 — Obrir el túnel i accedir a la web
+### Obrir el túnel i accedir a la web
 
 En una terminal a part (no la tanquis mentre fas proves):
 
@@ -583,13 +583,13 @@ Ara obre el navegador a `http://localhost:8080`.
 
 ---
 
-## Tasca 23: Rolling update — product-service :1.1 → :1.2
+## Rolling update — product-service :1.1 → :1.2
 
-### Pas 1 — Modificació del codi
+### Modificació del codi
 
 Per fer el rolling update visible, s'ha afegit un endpoint `/version` al `product-service` que retorna la versió activa. Això permet verificar de manera objectiva quina versió s'està executant dins dels pods, no només quina imatge diu el manifest.
 
-Canvis a 📄 [`product-service/app.py`](product-service/app.py):
+Canvis a [`product-service/app.py`](product-service/app.py):
 
 ```python
 VERSION = "1.2"                      # ← NOU: constant de versió
@@ -604,7 +604,7 @@ if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
 ```
 
-### Pas 2 — Construir i pujar la nova imatge
+### Construir i pujar la nova imatge
 
 ```bash
 docker build -t arodriguez5/shopmicro-product-service:1.2 ./product-service
@@ -614,9 +614,9 @@ docker push arodriguez5/shopmicro-product-service:1.2
 ![docker push de la 1.2](capturas/Imatge35.png)
 ![docker push de la 1.2](capturas/Imatge36.png)
 
-### Pas 3 — Actualitzar el manifest
+### Actualitzar el manifest
 
-Al fitxer 📄 [`k8s/generated/product-service-deployment.yaml`](k8s/generated/product-service-deployment.yaml), canvi de la imatge:
+Al fitxer [`k8s/generated/product-service-deployment.yaml`](k8s/generated/product-service-deployment.yaml), canvi de la imatge:
 
 ```yaml
 # Abans:
@@ -625,7 +625,7 @@ image: arodriguez5/shopmicro-product-service:1.1
 image: arodriguez5/shopmicro-product-service:1.2
 ```
 
-### Pas 4 — Disparar el rolling update
+### Disparar el rolling update
 
 S'obren tres terminals per veure el procés en temps real.
 
@@ -661,7 +661,7 @@ En cap moment hi ha menys de 2 pods disponibles → **zero downtime**.
 
 ![Rolling update — successfully rolled out](capturas/fase4/Imatge39.png)
 
-### Pas 5 — Verificar la nova versió
+### Verificar la nova versió
 
 ```bash
 # Confirmar la imatge activa
@@ -676,7 +676,7 @@ kubectl exec -n shopmicro deployment/api-gateway -- \
 ![Verificació /version](capturas/Imatge50.png)
 ![Verificació /version](capturas/Imatge51.png)
 
-### Pas 6 — Històric del rollout
+### Històric del rollout
 
 Una característica que Docker Swarm no té i Kubernetes sí és l'històric de desplegaments:
 
@@ -694,11 +694,11 @@ kubectl rollout undo deployment/product-service -n shopmicro
 
 ---
 
-## Tasca 24: Provar els 3 fluxos funcionals
+## Provar els 3 fluxos funcionals
 
 Un cop desplegada tota l'arquitectura a Kubernetes, es verifiquen els mateixos tres fluxos definits a l'apartat 2.3 de l'enunciat.
 
-### Flux 1 — Consulta de productes amb cache Redis
+### Consulta de productes amb cache Redis
 
 **Procediment:**
 
@@ -718,7 +718,7 @@ kubectl logs -n shopmicro -l app=product-service --tail=10
 
 ![Flux 1 — Logs product-service](capturas/Imatge45.png)
 
-### Flux 2 — Creació de comanda amb missatge asíncron a RabbitMQ
+### Creació de comanda amb missatge asíncron a RabbitMQ
 
 **Procediment:**
 
@@ -743,7 +743,7 @@ Ha d'aparèixer la notificació del missatge consumit de RabbitMQ:
 
 Això confirma el flux complet: el `order-service` ha publicat el missatge a RabbitMQ i el `notification-service`, que viu en un pod completament separat, l'ha consumit i registrat correctament.
 
-### Flux 3 — Self-healing (tolerància a fallades)
+### Self-healing (tolerància a fallades)
 
 A la Fase 2 es va provar aturant Docker en un node worker. A Kubernetes l'equivalent és eliminar un pod manualment i veure com el Deployment el recrea automàticament.
 
@@ -799,5 +799,3 @@ La migració de Docker Swarm a Kubernetes ha demostrat que els dos sistemes ofer
 - **Complexitat operativa**: 30+ fitxers YAML enfront d'un sol `docker-stack.yml`. La corba d'aprenentatge és molt més pronunciada.
 - **Secrets en Base64, no xifrats**: cal afegir solucions externes (Sealed Secrets, Vault) per a un xifrat real.
 - **Networking més complex**: cal entendre el concepte de Services i el seu DNS intern, mentre que a Swarm el routing mesh era automàtic.
-
-Per al cas concret de ShopMicro, **Docker Swarm seria suficient** per a una empresa petita amb pocs microserveis. **Kubernetes es justifica** quan es necessita escalat automàtic real (HPA), portabilitat a clouds públics, o quan l'equip té la mida suficient per absorbir la complexitat operativa.

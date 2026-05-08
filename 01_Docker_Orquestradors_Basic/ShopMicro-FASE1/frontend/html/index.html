@@ -8,7 +8,7 @@
 </head>
 <body>
     <header>
-        <h1>🛒 ShopMicro</h1>
+        <h1>ShopMicro</h1>
         <p class="subtitle">Plataforma de microserveis — 2 ASIX</p>
         <div id="user-bar">
             <span id="user-status">No autenticat</span>
@@ -18,7 +18,7 @@
     <main>
         <!-- SECCIÓ 1: USUARIS -->
         <section class="card">
-            <h2>👤 Usuaris</h2>
+            <h2>Usuaris</h2>
             <div class="form-row">
                 <input type="text" id="username" placeholder="Usuari">
                 <input type="password" id="password" placeholder="Contrasenya">
@@ -30,7 +30,7 @@
 
         <!-- SECCIÓ 2: PRODUCTES (FLUX 1) -->
         <section class="card">
-            <h2>📦 Catàleg de productes</h2>
+            <h2>Catàleg de productes</h2>
             <button onclick="loadProducts()" class="primary">Carregar productes</button>
             <p class="hint">Demostra el flux de cache: la primera crida ve de la BD, 
                les següents (durant 60s) venen de Redis.</p>
@@ -40,7 +40,7 @@
 
         <!-- SECCIÓ 3: COMANDES (FLUX 2) -->
         <section class="card">
-            <h2>🛍️ Crear comanda</h2>
+            <h2>Crear comanda</h2>
             <p class="hint">En crear una comanda: descompta stock, guarda a db-orders 
                i publica missatge a RabbitMQ → notification-service ho registra al log.</p>
             <div id="order-form" class="form-row">
@@ -55,7 +55,7 @@
 
         <!-- SECCIÓ 4: HISTORIAL -->
         <section class="card">
-            <h2>📋 Historial de comandes</h2>
+            <h2>Historial de comandes</h2>
             <button onclick="loadOrders()">Refrescar historial</button>
             <div id="orders-list"></div>
         </section>

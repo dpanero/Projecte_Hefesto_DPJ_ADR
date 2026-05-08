@@ -1,8 +1,7 @@
 services:
-  # ============== BASES DE DADES I CUES ==============
+  # ============== BASES DE DADES I CUES (només al manager) ==============
   db-products:
     image: mysql:8.0
-    container_name: db-products
     environment:
       MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
       MYSQL_DATABASE: products_db
@@ -20,10 +19,18 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
 
   db-orders:
     image: mysql:8.0
-    container_name: db-orders
     environment:
       MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
       MYSQL_DATABASE: orders_db
@@ -41,10 +48,16 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      restart_policy:
+        condition: on-failure
 
   cache:
     image: redis:7-alpine
-    container_name: cache
     networks:
       - data-net
     volumes:
@@ -54,10 +67,16 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      restart_policy:
+        condition: on-failure
 
   message-queue:
     image: rabbitmq:3-management
-    container_name: message-queue
     environment:
       RABBITMQ_DEFAULT_USER: admin
       RABBITMQ_DEFAULT_PASS: admin123
@@ -70,11 +89,17 @@ services:
       interval: 15s
       timeout: 10s
       retries: 5
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      restart_policy:
+        condition: on-failure
 
-  # ============== MICROSERVEIS ==============
+  # ============== MICROSERVEIS (replicats als workers) ==============
   product-service:
-    build: ./product-service
-    container_name: product-service
+    image: arodriguez5/shopmicro-product-service:1.0
     environment:
       DB_HOST: db-products
       DB_USER: appuser
@@ -84,15 +109,18 @@ services:
     networks:
       - backend-net
       - data-net
-    depends_on:
-      db-products:
-        condition: service_healthy
-      cache:
-        condition: service_healthy
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
 
   order-service:
-    build: ./order-service
-    container_name: order-service
+    image: arodriguez5/shopmicro-order-service:1.0
     environment:
       DB_PRODUCTS_HOST: db-products
       DB_ORDERS_HOST: db-orders
@@ -104,17 +132,18 @@ services:
     networks:
       - backend-net
       - data-net
-    depends_on:
-      db-products:
-        condition: service_healthy
-      db-orders:
-        condition: service_healthy
-      message-queue:
-        condition: service_healthy
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
 
   user-service:
-    build: ./user-service
-    container_name: user-service
+    image: arodriguez5/shopmicro-user-service:1.0
     environment:
       DB_HOST: db-orders
       DB_USER: appuser
@@ -124,62 +153,72 @@ services:
     networks:
       - backend-net
       - data-net
-    depends_on:
-      db-orders:
-        condition: service_healthy
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
 
   notification-service:
-    build: ./notification-service
-    container_name: notification-service
+    image: arodriguez5/shopmicro-notification-service:1.0
     environment:
       MQ_HOST: message-queue
       MQ_USER: admin
       MQ_PASS: admin123
     networks:
       - data-net
-    depends_on:
-      message-queue:
-        condition: service_healthy
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
 
   # ============== GATEWAY I FRONTEND ==============
   api-gateway:
-    build: ./api-gateway
-    container_name: api-gateway
+    image: arodriguez5/shopmicro-api-gateway:1.0
     networks:
       - frontend-net
       - backend-net
-    depends_on:
-      - product-service
-      - order-service
-      - user-service
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 10s
 
   frontend:
-    build: ./frontend
-    container_name: frontend
+    image: arodriguez5/shopmicro-frontend:1.0
     ports:
       - "8080:80"
     networks:
       - frontend-net
-    depends_on:
-      - api-gateway
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 10s
 
-# ============== XARXES ==============
+# ============== XARXES OVERLAY (necessàries en Swarm multi-node) ==============
 networks:
   frontend-net:
-    driver: bridge
+    driver: overlay
   backend-net:
-    driver: bridge
+    driver: overlay
   data-net:
-    driver: bridge
+    driver: overlay
 
-# ============== VOLUMS ==============
 volumes:
   db_products_data:
   db_orders_data:
   cache_data:
   mq_data:
 
-# ============== SECRETS ==============
 secrets:
   db_root_password:
     file: ./secrets/db_root_password.txt

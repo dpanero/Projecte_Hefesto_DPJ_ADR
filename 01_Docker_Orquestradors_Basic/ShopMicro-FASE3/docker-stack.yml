@@ -1,0 +1,417 @@
+# ============================================================================
+# ShopMicro - docker-stack.yml (Fase 3 - Seguretat)
+# ----------------------------------------------------------------------------
+# Aquest fitxer és l'evolució del docker-stack.yml de la Fase 2.
+# Els canvis principals respecte a la Fase 2 són:
+#
+#   1. Totes les contrasenyes s'han mogut a Docker Secrets (no estan en clar).
+#   2. Les xarxes s'han segmentat per aïllar serveis (principi de mínim privilegi).
+#   3. La nova versió de les imatges (1.1) ja sap llegir secrets de /run/secrets/.
+#
+# Convenció: tots els serveis utilitzen 'image:' (no 'build:') perquè en Swarm
+# multi-node les imatges han d'estar en un registry accessible (Docker Hub).
+# ============================================================================
+
+services:
+
+  # --------------------------------------------------------------------------
+  # BASE DE DADES DE PRODUCTES
+  # --------------------------------------------------------------------------
+  # MySQL és sensible a les contrasenyes en clar. En lloc de passar-les
+  # com a variables d'entorn (que es veuen amb 'docker inspect'), les
+  # passem com a secrets muntats a /run/secrets/* dins del contenidor.
+  # MySQL accepta variables especials acabades en _FILE que apunten al
+  # path d'un fitxer amb la contrasenya. Aquest és el patró recomanat.
+  # --------------------------------------------------------------------------
+  db-products:
+    image: mysql:8.0
+    environment:
+      # En lloc de MYSQL_ROOT_PASSWORD: pass1234, fem servir _FILE
+      # i Docker llegirà la contrasenya del fitxer secret.
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
+      MYSQL_DATABASE: products_db          # nom de la BD que es crearà
+      MYSQL_USER: appuser                  # usuari no-root per a l'app
+      MYSQL_PASSWORD_FILE: /run/secrets/db_user_password
+    secrets:
+      # Llistem només els secrets que aquest servei necessita.
+      # Si no els declarem aquí, Docker NO els munta dins del contenidor.
+      # Això és el principi de mínim privilegi: cada servei només té accés
+      # als secrets que realment fa servir.
+      - db_root_password
+      - db_user_password
+    volumes:
+      # El volum guarda les dades de MySQL perquè no es perdin si el
+      # contenidor es reinicia o es mou de node.
+      - db_products_data:/var/lib/mysql
+    networks:
+      # db-products només està a 'products-net'. Així només els serveis
+      # que també estan en aquesta xarxa (product-service, order-service)
+      # poden parlar-li. La resta de serveis no la "veuen".
+      - products-net
+    healthcheck:
+      # Comprova que MySQL respon. Swarm reinicia el contenidor si falla.
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      replicas: 1                          # només 1 instància (BD amb volum)
+      placement:
+        constraints: [node.role == manager]   # forçat al manager (té el volum)
+      restart_policy:
+        condition: on-failure              # si peta, reinicia automàticament
+
+  # --------------------------------------------------------------------------
+  # BASE DE DADES DE COMANDES I USUARIS
+  # --------------------------------------------------------------------------
+  # Mateixa lògica que db-products però per a comandes i usuaris.
+  # Està en una xarxa diferent (orders-net) per separar dominis: el
+  # product-service NO ha de poder llegir taules d'usuaris ni viceversa.
+  # --------------------------------------------------------------------------
+  db-orders:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
+      MYSQL_DATABASE: orders_db
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD_FILE: /run/secrets/db_user_password
+    secrets:
+      - db_root_password
+      - db_user_password
+    volumes:
+      - db_orders_data:/var/lib/mysql
+    networks:
+      - orders-net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+      restart_policy:
+        condition: on-failure
+
+  # --------------------------------------------------------------------------
+  # CACHE REDIS
+  # --------------------------------------------------------------------------
+  # Redis no necessita contrasenya en aquesta pràctica (entorn intern).
+  # Només la pot consultar el product-service perquè és l'únic que està
+  # connectat a 'cache-net'.
+  # --------------------------------------------------------------------------
+  cache:
+    image: redis:7-alpine
+    networks:
+      - cache-net                          # xarxa exclusiva per a la cache
+    volumes:
+      - cache_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+      restart_policy:
+        condition: on-failure
+
+# --------------------------------------------------------------------------
+  # CUA DE MISSATGES RABBITMQ
+  # --------------------------------------------------------------------------
+  # En les versions modernes de RabbitMQ (3.13+), les variables d'entorn
+  # RABBITMQ_DEFAULT_USER_FILE i RABBITMQ_DEFAULT_PASS_FILE estan deprecades
+  # i fan que el contenidor surti amb error. La solució oficial és definir
+  # els usuaris en un fitxer JSON de definicions que es carrega a l'arrencada.
+  #
+  # Aquí muntem dos secrets:
+  #   - rabbitmq_config       → fitxer rabbitmq.conf (apunta al JSON)
+  #   - rabbitmq_definitions  → fitxer JSON amb usuaris i hash de contrasenya
+  #
+  # Així mantenim el principi de la Fase 3: cap credencial en clar al YAML.
+  # --------------------------------------------------------------------------
+  message-queue:
+    image: rabbitmq:3-management
+    environment:
+      # Indiquem a RabbitMQ on trobarà el fitxer de configuració principal
+      RABBITMQ_CONFIG_FILE: /etc/rabbitmq/rabbitmq
+    secrets:
+      # Muntem el rabbitmq.conf en la ruta esperada per RabbitMQ
+      - source: rabbitmq_config
+        target: /etc/rabbitmq/rabbitmq.conf
+      # Muntem el JSON de definicions a /run/secrets/ per defecte;
+      # el rabbitmq.conf l'apunta amb load_definitions
+      - rabbitmq_definitions
+    volumes:
+      - mq_data:/var/lib/rabbitmq
+    networks:
+      - mq-net
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+      restart_policy:
+        condition: on-failure
+  
+  # ==========================================================================
+  # MICROSERVEIS D'API (lògica de negoci)
+  # ==========================================================================
+
+  # --------------------------------------------------------------------------
+  # PRODUCT-SERVICE
+  # --------------------------------------------------------------------------
+  # Llegeix la contrasenya de la BD del fitxer /run/secrets/db_user_password
+  # gràcies a la funció read_secret() que hem afegit al codi Python.
+  # Necessita estar a 3 xarxes alhora:
+  #   - backend-net  → perquè l'api-gateway li pugui passar peticions
+  #   - products-net → per parlar amb db-products
+  #   - cache-net    → per parlar amb Redis
+  # --------------------------------------------------------------------------
+  product-service:
+    image: arodriguez5/shopmicro-product-service:1.1
+    environment:
+      # Aquestes NO són dades sensibles, només noms de hosts/BDs.
+      # No cal posar-les com a secrets.
+      DB_HOST: db-products
+      DB_USER: appuser
+      DB_NAME: products_db
+      REDIS_HOST: cache
+    secrets:
+      # Només munta el secret de la contrasenya d'usuari, no el de root.
+      # L'app no necessita ser root a la BD.
+      - db_user_password
+    networks:
+      - backend-net
+      - products-net
+      - cache-net
+    deploy:
+      replicas: 2                          # 2 rèpliques per alta disponibilitat
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+      update_config:
+        parallelism: 1                     # rolling update: actualitza 1 a la vegada
+        delay: 10s
+        order: start-first                 # arrenca la nova abans de matar la vella
+
+  # --------------------------------------------------------------------------
+  # ORDER-SERVICE
+  # --------------------------------------------------------------------------
+  # És el servei amb més dependències:
+  #   - Llegeix stock de db-products       → necessita products-net
+  #   - Crea comandes a db-orders          → necessita orders-net
+  #   - Publica missatges a RabbitMQ       → necessita mq-net
+  # Per tant té el màxim nombre de secrets i xarxes.
+  # --------------------------------------------------------------------------
+  order-service:
+    image: arodriguez5/shopmicro-order-service:1.1
+    environment:
+      DB_PRODUCTS_HOST: db-products
+      DB_ORDERS_HOST: db-orders
+      DB_USER: appuser
+      MQ_HOST: message-queue
+    secrets:
+      - db_user_password                   # contrasenya de les dues BDs (la mateixa)
+      - mq_user                            # usuari de RabbitMQ
+      - mq_password                        # contrasenya de RabbitMQ
+    networks:
+      - backend-net
+      - products-net
+      - orders-net
+      - mq-net
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+
+  # --------------------------------------------------------------------------
+  # USER-SERVICE
+  # --------------------------------------------------------------------------
+  # Gestiona registre i login. Genera tokens JWT signats amb una clau
+  # secreta. Aquesta clau (jwt_secret) NO ha d'estar mai en clar perquè
+  # qualsevol que la conegués podria signar tokens vàlids i suplantar
+  # usuaris. Per això la passem com a Docker Secret.
+  # --------------------------------------------------------------------------
+  user-service:
+    image: arodriguez5/shopmicro-user-service:1.1
+    environment:
+      DB_HOST: db-orders
+      DB_USER: appuser
+      DB_NAME: orders_db
+    secrets:
+      - db_user_password
+      - jwt_secret                         # clau per signar tokens JWT
+    networks:
+      - backend-net
+      - orders-net                         # NO products-net (no ho necessita)
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+
+  # --------------------------------------------------------------------------
+  # NOTIFICATION-SERVICE
+  # --------------------------------------------------------------------------
+  # Consumeix missatges de RabbitMQ i els registra al log. NO té API web.
+  # Només necessita la xarxa de RabbitMQ. Cap accés a BDs ni a internet.
+  # És un bon exemple del principi de mínim privilegi: la superfície
+  # d'atac és mínima.
+  # --------------------------------------------------------------------------
+  notification-service:
+    image: arodriguez5/shopmicro-notification-service:1.1
+    environment:
+      MQ_HOST: message-queue
+    secrets:
+      - mq_user
+      - mq_password
+    networks:
+      - mq-net                             # NOMÉS aquesta xarxa
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+  # ==========================================================================
+  # GATEWAY I FRONTEND (capa pública)
+  # ==========================================================================
+
+  # --------------------------------------------------------------------------
+  # API-GATEWAY
+  # --------------------------------------------------------------------------
+  # Nginx que fa de proxy invers cap als microserveis. És l'únic punt
+  # d'entrada des del frontend cap al backend. No té accés directe a
+  # cap BD ni a la cua: només parla amb els microserveis.
+  # --------------------------------------------------------------------------
+  api-gateway:
+    image: arodriguez5/shopmicro-api-gateway:1.0
+    networks:
+      - frontend-net                       # rep peticions del frontend
+      - backend-net                        # les redirigeix als microserveis
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 10s
+
+  # --------------------------------------------------------------------------
+  # FRONTEND
+  # --------------------------------------------------------------------------
+  # Servidor Nginx que serveix HTML/JS/CSS estàtic. És l'únic servei
+  # amb un port publicat (8080). El frontend NOMÉS està a 'frontend-net':
+  # això vol dir que des del JavaScript del navegador NO es pot saltar
+  # l'api-gateway i parlar directament amb cap microservei o BD.
+  # --------------------------------------------------------------------------
+  frontend:
+    image: arodriguez5/shopmicro-frontend:1.0
+    ports:
+      # Port 8080 del host → port 80 del contenidor.
+      # Gràcies al routing mesh de Swarm, accedint a qualsevol IP del
+      # clúster pel port 8080 arribem aquí.
+      - "8080:80"
+    networks:
+      - frontend-net                       # ÚNICA xarxa: aïlla la part pública
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 10s
+
+# ============================================================================
+# XARXES OVERLAY
+# ----------------------------------------------------------------------------
+# En Swarm les xarxes són de tipus 'overlay': funcionen entre nodes
+# diferents (manager, worker1, worker2). Cada servei només pot parlar
+# amb altres serveis de les mateixes xarxes a les que pertany.
+#
+# El disseny segueix el principi de mínim privilegi: cap servei té
+# accés a una xarxa que no necessiti.
+#
+#   frontend-net  →  Usuari ↔ frontend ↔ api-gateway
+#   backend-net   →  api-gateway ↔ microserveis (product/order/user)
+#   products-net  →  product-service / order-service ↔ db-products
+#   orders-net    →  order-service / user-service ↔ db-orders
+#   cache-net     →  product-service ↔ Redis
+#   mq-net        →  order-service / notification-service ↔ RabbitMQ
+# ============================================================================
+networks:
+  frontend-net:
+    driver: overlay
+  backend-net:
+    driver: overlay
+  products-net:
+    driver: overlay
+  orders-net:
+    driver: overlay
+  cache-net:
+    driver: overlay
+  mq-net:
+    driver: overlay
+
+# ============================================================================
+# VOLUMS PERSISTENTS
+# ----------------------------------------------------------------------------
+# Aquí Docker els crea amb noms autogenerats. Sobreviuen al cicle de
+# vida dels contenidors: si reiniciem la stack, les dades segueixen.
+# ============================================================================
+volumes:
+  db_products_data: {}
+  db_orders_data: {}
+  cache_data: {}
+  mq_data: {}
+
+# ============================================================================
+# SECRETS EXTERNS
+# ----------------------------------------------------------------------------
+# 'external: true' significa que aquests secrets ja existeixen al
+# clúster perquè els hem creat manualment amb 'docker secret create'.
+# Docker NO els tornarà a crear ni a sobreescriure: només comprova que
+# existeixen abans de desplegar.
+#
+# Comandes que els van crear (vegeu memòria - Tasca 2):
+#   echo -n 'rootpass123'        | docker secret create db_root_password -
+#   echo -n 'apppass123'         | docker secret create db_user_password -
+#   echo -n 'admin'              | docker secret create mq_user -
+#   echo -n 'admin123'           | docker secret create mq_password -
+#   echo -n 'clausecreta_2asix'  | docker secret create jwt_secret -
+#
+# AVANTATGE: el cicle de vida dels secrets està desacoblat del cicle
+# de vida del stack. Podem actualitzar la stack sense tocar els secrets,
+# i els podem rotar (crear-ne de nous) sense reescriure aquest fitxer.
+# ============================================================================
+secrets:
+  db_root_password:
+    external: true
+  db_user_password:
+    external: true
+  mq_user:
+    external: true
+  mq_password:
+    external: true
+  jwt_secret:
+    external: true
+  rabbitmq_config:
+    external: true
+  rabbitmq_definitions:
+    external: true

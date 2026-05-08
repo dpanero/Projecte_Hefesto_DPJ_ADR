@@ -2,7 +2,7 @@
 
 [Tornar al inici de Hefesto](/README.md)
 
-> **Projecte de 2 ASIR** — Containerització, orquestració i seguretat amb Docker
+> Containerització, orquestració i seguretat amb Docker
 
 ## Sobre el projecte
 
@@ -29,19 +29,19 @@ La plataforma es compon de **9 serveis** containeritzats:
 
 Aquest repositori conté la documentació completa del projecte dividida en quatre fases:
 
-### [Fase 1 — Docker Compose (Desenvolupament)](ShopMicro-FASE1/fase1.md)
+### [Docker Compose-Desenvolupament](ShopMicro-FASE1/fase1.md)
 
 Containerització de tots els serveis i orquestració amb Docker Compose en un entorn de desenvolupament local. S'inclou la configuració de xarxes internes, volums persistents, healthchecks i el desenvolupament del frontend amb tres fluxos funcionals demostrables.
 
-### [Fase 2 — Docker Swarm (Alta disponibilitat)](ShopMicro-FASE2/fase2.md)
+### [Docker Swarm-Alta disponibilitat](ShopMicro-FASE2/fase2.md)
 
 Migració de Docker Compose a un clúster Docker Swarm format per 3 nodes (1 manager + 2 workers). S'aplica l'arquitectura de rèpliques, restart policies i rolling updates. S'inclouen proves de tolerància a fallades i escalat en calent.
 
-### [Fase 3 — Seguretat](ShopMicro-FASE3/fase3.md)
+### [Seguretat](ShopMicro-FASE3/fase3.md)
 
 Aplicació de mesures de seguretat al clúster Swarm: migració de credencials a Docker Secrets, aïllament de xarxes overlay seguint el principi de mínim privilegi, anàlisi del TLS automàtic entre nodes amb CA interna, i escaneig de vulnerabilitats amb Docker Scout.
 
-### [Fase 4 — Kubernetes (Producció)](ShopMicro-FASE4/fase4.md)
+### [Kubernetes](ShopMicro-FASE4/fase4.md)
 
 Migració de l'arquitectura a Kubernetes per a l'entorn de producció. *(Pendent d'execució)*
 
@@ -71,7 +71,6 @@ El projecte ha permès:
 - Aprendre a gestionar **race conditions** entre serveis dependents (BD vs microserveis).
 - Comprendre els avantatges del **TLS mutu automàtic** de Swarm per a la comunicació entre nodes.
 - Identificar i mitigar **vulnerabilitats reals** (CVE) a les imatges utilitzades.
-- Adaptar-se a canvis d'API en imatges oficials (cas de la deprecació de `RABBITMQ_DEFAULT_USER_FILE` en versions recents de RabbitMQ).
 
 ---
 

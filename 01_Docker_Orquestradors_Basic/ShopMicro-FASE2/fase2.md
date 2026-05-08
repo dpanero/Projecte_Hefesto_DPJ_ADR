@@ -25,10 +25,10 @@ Per a aquesta fase s'han preparat **3 màquines virtuals** a VirtualBox amb Ubun
 | `worker1` | Worker Swarm | 192.168.0.2 | 192.168.56.3 |
 | `worker2` | Worker Swarm | 192.168.0.3 | 192.168.56.4 |
 
-> 💡 **Configuració de xarxa**: cada VM té dos adaptadors. La **xarxa interna** (`192.168.0.0/24`) és la que utilitzen els nodes per comunicar-se entre ells durant el funcionament del clúster Swarm. La **xarxa host-only** (`192.168.56.0/24`) és la que utilitza el meu Windows per connectar-me per SSH a les VMs.
+> **Configuració de xarxa**: cada VM té dos adaptadors. La **xarxa interna** (`192.168.0.0/24`) és la que utilitzen els nodes per comunicar-se entre ells durant el funcionament del clúster Swarm. La **xarxa host-only** (`192.168.56.0/24`) és la que utilitza el meu Windows per connectar-me per SSH a les VMs.
 
-> 📸 **CAPTURA 2.1** — Captura mostrant les tres VMs encesses al VirtualBox amb els seus noms i adreces IP.
-
+> Captura mostrant les tres VMs encesses al VirtualBox amb els seus noms i adreces IP.
+![a](capturas/22.png)
 ---
 
 ## 2. Pujar imatges a Docker Hub
@@ -60,11 +60,9 @@ docker push arodriguez5/shopmicro-user-service:1.0
 docker push arodriguez5/shopmicro-notification-service:1.0
 ```
 
-> 📸 **CAPTURA 2.2** — Sortida del `docker compose up -d --build` mostrant la construcció de les 6 imatges localment.
+> Captura de la pàgina de Docker Hub a `https://hub.docker.com/u/arodriguez5` mostrant els 6 repositoris.
 
-> 📸 **CAPTURA 2.3** — Sortida dels `docker push` mostrant les imatges pujades a Docker Hub.
-
-> 📸 **CAPTURA 2.4** — Captura de la pàgina de Docker Hub a `https://hub.docker.com/u/arodriguez5` mostrant els 6 repositoris.
+![Captura de la pàgina de Docker Hub a `https://hub.docker.com/u/arodriguez5` mostrant els 6 repositoris](capturas/23.png)
 
 ---
 
@@ -92,14 +90,14 @@ A `worker1` i `worker2`, executem la comanda `docker swarm join` amb el token re
 docker node ls
 ```
 
-> 📸 **CAPTURA 2.5** — Sortida de `docker node ls` mostrant els 3 nodes en estat `Ready` i `Active`, amb el manager com a `Leader`.
+> Demostració
 
-```
-ID                            HOSTNAME   STATUS    AVAILABILITY   MANAGER STATUS
-n29jmdhodb5t6wuz5ktn2sd6b *   manager    Ready     Active         Leader
-xciydcayxgoavr96qb8oaviin     worker1    Ready     Active         
-8j5zj4tb6ej7lcian6s24gbz7     worker2    Ready     Active
-```
+![q](capturas/24.png)
+![w](capturas/25.png)
+![e](capturas/26.png)
+![s](capturas/27.png)
+![p](capturas/27.png)
+![p](capturas/Imatge6.png)
 
 ---
 
@@ -126,7 +124,9 @@ Cada servei té un bloc `deploy:` amb:
 - **`restart_policy`**: reinici automàtic si un contenidor cau.
 - **`update_config`**: rolling update amb `parallelism: 1` i `order: start-first` (zero downtime).
 
-> 📸 **CAPTURA 2.6** — Captura del fitxer `docker-stack.yml` complet (pot ser en diverses parts).
+> fitxer `docker-stack.yml` complet.
+
+- [docker-stack.yml](./docker-stack.yml)
 
 ### Exemple de bloc `deploy:` per a un microservei
 
@@ -181,9 +181,13 @@ scp docker-stack.yml arodriguez@192.168.56.2:~/shopmicro/
 scp -r secrets arodriguez@192.168.56.2:~/shopmicro/
 ```
 
-> 📸 **CAPTURA 2.7** — Sortida de l'`scp` mostrant la transferència dels fitxers al manager.
+> Sortida de l'`scp` mostrant la transferència dels fitxers al manager.
 
-> 📸 **CAPTURA 2.8** — Sortida de `ls -la` al manager mostrant `docker-stack.yml` i la carpeta `secrets/`.
+![pop](capturas/28.png)
+
+>Sortida de `ls -la` al manager mostrant `docker-stack.yml` i la carpeta `secrets/`.
+
+![pop2](capturas/Imatge9.png)
 
 ### Desplegament
 
@@ -191,7 +195,8 @@ scp -r secrets arodriguez@192.168.56.2:~/shopmicro/
 docker stack deploy -c docker-stack.yml shopmicro
 ```
 
-> 📸 **CAPTURA 2.9** — Sortida del `docker stack deploy` mostrant la creació de xarxes, secrets i serveis.
+![pop3](capturas/Imatge10.png)
+
 
 ### Verificació de l'estat dels serveis
 
@@ -199,7 +204,7 @@ docker stack deploy -c docker-stack.yml shopmicro
 docker stack services shopmicro
 ```
 
-> 📸 **CAPTURA 2.10** — Sortida de `docker stack services shopmicro` mostrant tots els serveis amb les rèpliques desitjades.
+![pop4](capturas/Imatge11.png)
 
 ### Distribució de rèpliques per node
 
@@ -207,21 +212,15 @@ docker stack services shopmicro
 docker stack ps shopmicro
 ```
 
-> 📸 **CAPTURA 2.11** — Sortida de `docker stack ps shopmicro` mostrant on s'executa cada rèplica (manager, worker1 o worker2).
+![pop5](capturas/Imatge12.png)
 
 ### Demostració del routing mesh
 
 Una característica clau de Swarm és el **routing mesh**: el port 8080 està disponible des de **qualsevol IP del clúster**, encara que el contenidor del frontend només s'executi físicament en un dels nodes. Swarm enruta automàticament la petició al node correcte.
 
-```bash
-curl -I http://192.168.0.1:8080    # via manager
-curl -I http://192.168.0.2:8080    # via worker1
-curl -I http://192.168.0.3:8080    # via worker2
-```
+> Sortida dels diferents IPs del clúster.
 
-Les tres comandes han de retornar `HTTP/1.1 200 OK`.
-
-> 📸 **CAPTURA 2.12** — Sortida dels tres `curl` a les diferents IPs del clúster, totes responent amb 200 OK.
+![pop6](capturas/29.png)
 
 ### Logs del notification-service durant l'ús
 
@@ -229,7 +228,9 @@ Les tres comandes han de retornar `HTTP/1.1 200 OK`.
 docker service logs shopmicro_notification-service --tail 10
 ```
 
-> 📸 **CAPTURA 2.13** — Logs del `notification-service` mostrant els missatges `[NOTIFICACIÓ] Comanda #X creada...` i confirmant que el flux 2 funciona en el clúster.
+> Logs mostrant els missatges `[NOTIFICACIÓ] Comanda #X creada...` i confirmant que el flux 2 funciona en el clúster.
+
+![pop7](capturas/Imatge14.png)
 
 ### Resolució de problemes detectats
 
@@ -258,7 +259,7 @@ Per simular una fallada de hardware, atura el servei Docker al `worker2`:
 sudo systemctl stop docker
 ```
 
-> 📸 **CAPTURA 2.14** — Sortida del `systemctl stop docker` al worker2.
+![pop8](capturas/Imatge16.png)
 
 ### Verificació al manager
 
@@ -268,7 +269,7 @@ Després d'esperar uns 30 segons, des del manager:
 docker node ls
 ```
 
-> 📸 **CAPTURA 2.15** — Sortida de `docker node ls` mostrant `worker2` amb `STATUS: Down`.
+![pop9](capturas/Imatge17.png)
 
 ### Redistribució automàtica de rèpliques
 
@@ -276,7 +277,9 @@ docker node ls
 docker stack ps shopmicro
 ```
 
-> 📸 **CAPTURA 2.16** — Sortida de `docker stack ps shopmicro` mostrant com Swarm ha llançat noves rèpliques al manager i worker1 per substituir les que estaven a worker2 (apareixen com `Shutdown` les antigues i `Running` les noves).
+> Sortida de `docker stack ps shopmicro` mostrant com Swarm ha llançat noves rèpliques al manager i worker1 per substituir les que estaven a worker2.
+
+![pop10](capturas/Imatge18.png)
 
 ### Verificació que el servei segueix funcionant
 
@@ -286,7 +289,9 @@ curl http://192.168.0.1:8080/api/products
 
 La web continua responent normalment a `http://192.168.56.2:8080`.
 
-> 📸 **CAPTURA 2.17** — Captura de la web carregant correctament tot i tenir worker2 caigut.
+> Captura de la web carregant correctament tot i tenir worker2 caigut.
+
+![pop11](capturas/Imatge19.png)
 
 ### Reincorporació del worker2
 
@@ -302,7 +307,9 @@ Després d'un minut:
 docker node ls
 ```
 
-> 📸 **CAPTURA 2.18** — Sortida de `systemctl start docker` al worker2 i, després, sortida de `docker node ls` al manager mostrant worker2 de nou en estat `Ready`.
+> sortida de `docker node ls` al manager mostrant worker2 de nou en estat `Ready`.
+
+![pop12](capturas/Imatge21.png)
 
 ---
 
@@ -314,8 +321,6 @@ Una de les funcionalitats més potents de Swarm és la possibilitat d'**escalar 
 docker service scale shopmicro_product-service=4
 ```
 
-> 📸 **CAPTURA 2.19** — Sortida de la comanda `docker service scale` mostrant `4/4 running`.
-
 ### Verificació de la distribució
 
 ```bash
@@ -323,7 +328,9 @@ docker stack services shopmicro
 docker stack ps shopmicro --filter desired-state=running | grep product
 ```
 
-> 📸 **CAPTURA 2.20** — Sortida de `docker stack services shopmicro` amb `product-service: 4/4` i la distribució de les 4 rèpliques entre els 3 nodes (manager, worker1, worker2).
+> Sortida de la comanda `docker service scale` mostrant `4/4 running` i Sortida de `docker stack services shopmicro` amb `product-service: 4/4` i la distribució de les 4 rèpliques entre els 3 nodes.
+
+![pop133](capturas/Imatge22.png)
 
 L'escalat ha estat **transparent per als usuaris**: la web ha seguit funcionant durant tota l'operació.
 
@@ -357,5 +364,3 @@ L'escalat ha estat **transparent per als usuaris**: la web ha seguit funcionant 
 Aquestes limitacions es tracten a la fase següent.
 
 ---
-
-*⬅️ Tornar a la [Fase 1](./FASE1.md) | Anar a la [Fase 3 — Seguretat](./FASE3.md) ➡️*
