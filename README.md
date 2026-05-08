@@ -47,6 +47,14 @@ La infraestructura està composta per:
 
 ---
 
+# Memoria final
+
+| Document | Descripció |
+|---------|------------|
+| [Documentació final](docs/Memoria_Projecte_Hefesto.pdf) | Memoria que recull el treball de tots els miniprojectes |
+
+---
+
 # Tecnologies utilitzades
 
 - pfSense
